@@ -1,4 +1,4 @@
-fetch("../ccna.json")
+fetch("ccna.json")
   .then(res => res.json())
   .then(data => buildTable(data));
 

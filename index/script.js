@@ -3,7 +3,7 @@ let current = null;
 let selected = new Set();
 let checked = false;
 
-fetch("../ccna.json")
+fetch("ccna.json")
   .then(r => r.json())
   .then(data => {
     questions = data;
