@@ -13,7 +13,9 @@ fetch("ccna.json")
 function isMultiCorrect(question) {
   return question.answers.filter(a => a.correct).length > 1;
 }
-
+function correctCount(question) {
+  return question.answers.filter(a => a.correct).length;
+}
 
 function loadQuestion() {
   checked = false;
@@ -52,6 +54,14 @@ function loadQuestion() {
 
 document.getElementById("check").onclick = () => {
   if (checked) return;
+
+  const required = correctCount(current);
+
+  if (selected.size !== required) {
+    alert(`You must select exactly ${required} answers.`);
+    return;
+  }
+
   checked = true;
 
   document.querySelectorAll("#answers button").forEach((btn, i) => {
@@ -65,5 +75,6 @@ document.getElementById("check").onclick = () => {
     btn.disabled = true;
   });
 };
+
 
 document.getElementById("next").onclick = loadQuestion;
