@@ -21,9 +21,23 @@ function loadQuestion() {
   checked = false;
   selected.clear();
 
+  // náhodná otázka
   current = questions[Math.floor(Math.random() * questions.length)];
+
+  // otázka
   document.getElementById("question").textContent = current.question;
 
+  // obrázek
+  const imgEl = document.getElementById("questionImage");
+  if (current.img_url) {
+    imgEl.src = current.img_url;
+    imgEl.style.display = "block";
+  } else {
+    imgEl.src = "";
+    imgEl.style.display = "none";
+  }
+
+  // odpovědi
   const answersEl = document.getElementById("answers");
   answersEl.innerHTML = "";
 
@@ -37,7 +51,6 @@ function loadQuestion() {
       if (checked) return;
 
       if (!multi) {
-        // single choice → zruš ostatní
         selected.clear();
         document
           .querySelectorAll("#answers button")
@@ -51,6 +64,7 @@ function loadQuestion() {
     answersEl.appendChild(btn);
   });
 }
+
 
 document.getElementById("check").onclick = () => {
   if (checked) return;

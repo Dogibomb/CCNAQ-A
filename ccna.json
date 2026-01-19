@@ -1,6 +1,7 @@
 [
     {
         "question": "1. Which two traffic types use the Real-Time Transport Protocol (RTP)? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "video",
@@ -26,6 +27,7 @@
     },
     {
         "question": "2. Which wireless technology has low-power and data rate requirements making it popular in home automation applications?",
+        "img_url": null,
         "answers": [
             {
                 "text": "ZigBee",
@@ -47,6 +49,7 @@
     },
     {
         "question": "3. Which layer of the TCP/IP model provides a route to forward messages through an internetwork?",
+        "img_url": null,
         "answers": [
             {
                 "text": "application",
@@ -68,6 +71,7 @@
     },
     {
         "question": "4. Which type of server relies on record types such as A, NS, AAAA, and MX in order to provide services?",
+        "img_url": null,
         "answers": [
             {
                 "text": "DNS",
@@ -89,6 +93,7 @@
     },
     {
         "question": "5. What are proprietary protocols?",
+        "img_url": null,
         "answers": [
             {
                 "text": "protocols developed by private organizations to operate on any vendor hardware",
@@ -110,6 +115,7 @@
     },
     {
         "question": "6. What service is provided by DNS?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Resolves domain names, such as cisco.com, into IP addresses.",
@@ -131,6 +137,7 @@
     },
     {
         "question": "7. A client packet is received by a server. The packet has a destination port number of 110. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "DNS",
@@ -152,6 +159,7 @@
     },
     {
         "question": "8. What command can be used on a Windows PC to see the IP configuration of that computer?",
+        "img_url": null,
         "answers": [
             {
                 "text": "show ip interface brief",
@@ -173,6 +181,7 @@
     },
     {
         "question": "9. A wired laser printer is attached to a home computer. That printer has been shared so that other computers on the home network can also use the printer. What networking model is in use?",
+        "img_url": null,
         "answers": [
             {
                 "text": "client-based",
@@ -194,6 +203,7 @@
     },
     {
         "question": "10. What characteristic describes a virus?",
+        "img_url": null,
         "answers": [
             {
                 "text": "a network device that filters access and traffic coming into a network",
@@ -215,6 +225,7 @@
     },
     {
         "question": "11. Three bank employees are using the corporate network. The first employee uses a web browser to view a company web page in order to read some announcements. The second employee accesses the corporate database to perform some financial transactions. The third employee participates in an important live audio conference with other corporate managers in branch offices. If QoS is implemented on this network, what will be the priorities from highest to lowest of the different data types?",
+        "img_url": null,
         "answers": [
             {
                 "text": "financial transactions, web page, audio conference",
@@ -235,7 +246,8 @@
         ]
     },
     {
-        "question": "13. Refer to the exhibit. If Host1 were to transfer a file to the server, what layers of the TCP/IP model would be used?",
+        "question": "12. Match the description to the IPv6 addressing component. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/2020-03-26_171754.png",
         "answers": [
             {
                 "text": "only application and Internet layers",
@@ -264,7 +276,60 @@
         ]
     },
     {
+        "question": "13. Refer to the exhibit. If Host1 were to transfer a file to the server, what layers of the TCP/IP model would be used?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2016/03/i275370v1n1_275370-2.png",
+        "answers": [
+            {
+                "text": "only application and Internet layers",
+                "correct": false
+            },
+            {
+                "text": "only Internet and network access layers",
+                "correct": false
+            },
+            {
+                "text": "only application, Internet, and network access layers",
+                "correct": false
+            },
+            {
+                "text": "application, transport, Internet, and network access layers",
+                "correct": true
+            },
+            {
+                "text": "only application, transport, network, data link, and physical layers",
+                "correct": false
+            },
+            {
+                "text": "application, session, transport, network, data link, and physical layers",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "question": "14. Match the characteristic to the forwarding method. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/28.png",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "15. Refer to the exhibit. The IP address of which device interface should be used as the default gateway setting of host H1?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/35.jpg",
         "answers": [
             {
                 "text": "R1: S0/0/0",
@@ -286,6 +351,7 @@
     },
     {
         "question": "16. What service is provided by Internet Messenger?",
+        "img_url": null,
         "answers": [
             {
                 "text": "An application that allows real-time chatting among remote users.",
@@ -306,7 +372,30 @@
         ]
     },
     {
+        "question": "17. Refer to the exhibit. Match the network with the correct IP address and prefix that will satisfy the usable host addressing requirements for each network.",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i304956v6n1_207918.png",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "18. Refer to the exhibit. Which protocol was responsible for building the table that is shown?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/2021-03-22_150538.jpg",
         "answers": [
             {
                 "text": "DHCP",
@@ -328,6 +417,7 @@
     },
     {
         "question": "19. A network administrator notices that some newly installed Ethernet cabling is carrying corrupt and distorted data signals. The new cabling was installed in the ceiling close to fluorescent lights and electrical equipment. Which two factors may interfere with the copper cabling and result in signal distortion and data corruption? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "crosstalk",
@@ -353,6 +443,7 @@
     },
     {
         "question": "20. A host is trying to send a packet to a device on a remote LAN segment, but there are currently no mappings in its ARP cache. How will the device obtain a destination MAC address?",
+        "img_url": null,
         "answers": [
             {
                 "text": "It will send the frame and use its own MAC address as the destination.",
@@ -378,6 +469,7 @@
     },
     {
         "question": "22. A client packet is received by a server. The packet has a destination port number of 53. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "DNS",
@@ -399,6 +491,7 @@
     },
     {
         "question": "23. A network administrator is adding a new LAN to a branch office. The new LAN must support 25 connected devices. What is the smallest network mask that the network administrator can use for the new network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "255.255.255.128",
@@ -420,6 +513,7 @@
     },
     {
         "question": "24. What characteristic describes a Trojan horse?",
+        "img_url": null,
         "answers": [
             {
                 "text": "malicious software or code running on an end device",
@@ -441,6 +535,7 @@
     },
     {
         "question": "25. What service is provided by HTTPS?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Uses encryption to provide secure remote access to network devices and servers.",
@@ -462,6 +557,7 @@
     },
     {
         "question": "26. A technician with a PC is using multiple applications while connected to the Internet. How is the PC able to keep track of the data flow between multiple application sessions and have each application receive the correct packet flows?",
+        "img_url": null,
         "answers": [
             {
                 "text": "The data flow is being tracked based on the destination MAC address of the technician PC.",
@@ -483,6 +579,7 @@
     },
     {
         "question": "27. A network administrator is adding a new LAN to a branch office. The new LAN must support 61 connected devices. What is the smallest network mask that the network administrator can use for the new network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "255.255.255.240",
@@ -503,7 +600,30 @@
         ]
     },
     {
+        "question": "28. Refer to the exhibit. Match the network with the correct IP address and prefix that will satisfy the usable host addressing requirements for each network. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2016/03/i207918v1n1_207918-1-1.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            }
+        ]
+    },
+    {
         "question": "29. What characteristic describes a DoS attack?",
+        "img_url": null,
         "answers": [
             {
                 "text": "the use of stolen credentials to access private data",
@@ -524,7 +644,30 @@
         ]
     },
     {
+        "question": "30. Match the application protocols to the correct transport protocols.",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2019/12/2023-04-11_151037.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "31. What service is provided by SMTP?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Allows clients to send email to a mail server and the servers to send email to other servers.",
@@ -546,6 +689,7 @@
     },
     {
         "question": "32. Which scenario describes a function provided by the transport layer?",
+        "img_url": null,
         "answers": [
             {
                 "text": "A student is using a classroom VoIP phone to call home. The unique identifier burned into the phone is a transport layer address used to contact another network device on the same network.",
@@ -567,27 +711,29 @@
     },
     {
         "question": "33.Refer to the exhibit. Host B on subnet Teachers transmits a packet to host D on subnet Students. Which Layer 2 and Layer 3 addresses are contained in the PDUs that are transmitted from host B to the router?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i204796v11n1_204796-TOPOLOGY-ARP.png",
         "answers": [
             {
-                "text": "strengthening of a signal by a networking device",
+                "text": "Layer 2 destination address = 00-00-0c-94-36-ab Layer 2 source address = 00-00-0c-94-36-bb Layer 3 destination address = 172.16.20. 200 Layer 3 source address = 172.16.10.200",
                 "correct": false
             },
             {
-                "text": "leakage of signals from one cable pair to another",
+                "text": "Layer 2 destination address = 00-00-0c-94-36-dd Layer 2 source address = 00-00-0c-94-36-bb Layer 3 destination address = 172.16.20.200 Layer 3 source address = 172.16.10.200",
                 "correct": false
             },
             {
-                "text": "time for a signal to reach its destination",
+                "text": "Layer 2 destination address = 00-00-0c-94-36-cd Layer 2 source address = 00-00-0c-94-36-bb Layer 3 destination address = 172.16.20.99 Layer 3 source address = 172.16.10.200",
                 "correct": false
             },
             {
-                "text": "loss of signal strength as distance increases",
+                "text": "Layer 2 destination address = 00-00-0c-94-36-ab Layer 2 source address = 00-00-0c-94-36-bb Layer 3 destination address = 172.16.20.200 Layer 3 source address = 172.16.100.200",
                 "correct": true
             }
         ]
     },
     {
         "question": "34. What does the term “attenuation” mean in data communication?",
+        "img_url": null,
         "answers": [
             {
                 "text": "strengthening of a signal by a networking device",
@@ -609,6 +755,7 @@
     },
     {
         "question": "35. Refer to the exhibit. An administrator is trying to configure the switch but receives the error message that is displayed in the exhibit. What is the problem?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i208399v1n1_Question-1.png",
         "answers": [
             {
                 "text": "The entire command, configure terminal, must be used.",
@@ -630,6 +777,7 @@
     },
     {
         "question": "36. Which two protocols operate at the top layer of the TCP/IP protocol suite? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "TCP",
@@ -659,6 +807,7 @@
     },
     {
         "question": "37. A company has a file server that shares a folder named Public. The network security policy specifies that the Public folder is assigned Read-Only rights to anyone who can log into the server while the Edit rights are assigned only to the network admin group. Which component is addressed in the AAA network service framework?",
+        "img_url": null,
         "answers": [
             {
                 "text": "automation",
@@ -680,6 +829,7 @@
     },
     {
         "question": "38. What three requirements are defined by the protocols used in network communcations to allow message transmission across a network? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "message size",
@@ -709,6 +859,7 @@
     },
     {
         "question": "39. What are two characteristics of IP? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "does not require a dedicated end-to-end connection",
@@ -734,6 +885,7 @@
     },
     {
         "question": "40. An employee of a large corporation remotely logs into the company using the appropriate username and password. The employee is attending an important video conference with a customer concerning a large sale. It is important for the video quality to be excellent during the meeting. The employee is unaware that after a successful login, the connection to the company ISP failed. The secondary connection, however, activated within seconds. The disruption was not noticed by the employee or other employees.\nWhat three network characteristics are described in this scenario? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "security",
@@ -763,6 +915,7 @@
     },
     {
         "question": "41. What are two common causes of signal degradation when using UTP cabling? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "improper termination",
@@ -788,6 +941,7 @@
     },
     {
         "question": "42. Which subnet would include the address 192.168.1.96 as a usable host address?",
+        "img_url": null,
         "answers": [
             {
                 "text": "192.168.1.64/26",
@@ -808,7 +962,34 @@
         ]
     },
     {
+        "question": "192.168.1.64/26",
+        "img_url": null,
+        "answers": [
+            {
+                "text": "This host does not have a default gateway configured.",
+                "correct": false
+            },
+            {
+                "text": "There are 4 hops between this device and the device at 192.168.100.1.",
+                "correct": true
+            },
+            {
+                "text": "There is connectivity between this device and the device at 192.168.100.1.",
+                "correct": true
+            },
+            {
+                "text": "The connectivity between these two hosts allows for videoconferencing calls.",
+                "correct": false
+            },
+            {
+                "text": "The average transmission time between the two hosts is 2 milliseconds.",
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "43. Refer to the exhibit. On the basis of the output, which two statements about network connectivity are correct? (Choose two.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i275429v1n1_chapter-9-WAN-images2.jpg",
         "answers": [
             {
                 "text": "This host does not have a default gateway configured.",
@@ -834,6 +1015,7 @@
     },
     {
         "question": "44. Which two statements describe how to assess traffic flow patterns and network traffic types using a protocol analyzer? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "Capture traffic on the weekends when most employees are off work.",
@@ -859,6 +1041,7 @@
     },
     {
         "question": "45. What is the consequence of configuring a router with the ipv6 unicast-routing global configuration command?​",
+        "img_url": null,
         "answers": [
             {
                 "text": "All router interfaces will be automatically activated.",
@@ -880,6 +1063,7 @@
     },
     {
         "question": "46. Which three layers of the OSI model map to the application layer of the TCP/IP model? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "application",
@@ -909,6 +1093,7 @@
     },
     {
         "question": "47. Refer to the exhibit. If PC1 is sending a packet to PC2 and routing has been configured between the two routers, what will R1 do with the Ethernet frame header attached by PC1?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i271152v1n1_271152.png",
         "answers": [
             {
                 "text": "nothing, because the router has a route to the destination network",
@@ -930,6 +1115,7 @@
     },
     {
         "question": "48. What will happen if the default gateway address is incorrectly configured on a host?",
+        "img_url": null,
         "answers": [
             {
                 "text": "The host cannot communicate with other hosts in the local network.",
@@ -955,6 +1141,7 @@
     },
     {
         "question": "49. What are two features of ARP? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "When a host is encapsulating a packet into a frame, it refers to the MAC address table to determine the mapping of IP addresses to MAC addresses.",
@@ -980,6 +1167,7 @@
     },
     {
         "question": "50. A network administrator is adding a new LAN to a branch office. The new LAN must support 90 connected devices. What is the smallest network mask that the network administrator can use for the new network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "255.255.255.128",
@@ -1001,6 +1189,7 @@
     },
     {
         "question": "51. What are two ICMPv6 messages that are not present in ICMP for IPv4? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "Neighbor Solicitation",
@@ -1030,6 +1219,7 @@
     },
     {
         "question": "52. A client packet is received by a server. The packet has a destination port number of 80. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "DHCP",
@@ -1051,6 +1241,7 @@
     },
     {
         "question": "53. What is an advantage for small organizations of adopting IMAP instead of POP?",
+        "img_url": null,
         "answers": [
             {
                 "text": "POP only allows the client to store messages in a centralized way, while IMAP allows distributed storage.",
@@ -1072,6 +1263,7 @@
     },
     {
         "question": "54. A technician can ping the IP address of the web server of a remote company but cannot successfully ping the URL address of the same web server. Which software utility can the technician use to diagnose the problem?",
+        "img_url": null,
         "answers": [
             {
                 "text": "tracert",
@@ -1093,6 +1285,7 @@
     },
     {
         "question": "55. Which two functions are performed at the LLC sublayer of the OSI Data Link Layer to facilitate Ethernet communication? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "implements CSMA/CD over legacy shared half-duplex media",
@@ -1118,6 +1311,7 @@
     },
     {
         "question": "56. The global configuration command ip default-gateway 172.16.100.1 is applied to a switch. What is the effect of this command?",
+        "img_url": null,
         "answers": [
             {
                 "text": "The switch can communicate with other hosts on the 172.16.100.0 network.",
@@ -1139,6 +1333,7 @@
     },
     {
         "question": "57. What happens when the transport input ssh command is entered on the switch vty lines?",
+        "img_url": null,
         "answers": [
             {
                 "text": "The SSH client on the switch is enabled.",
@@ -1159,7 +1354,30 @@
         ]
     },
     {
+        "question": "58. Match the type of threat with the cause. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2019/12/2024-11-19_103653.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "59. A disgruntled employee is using some free wireless networking tools to determine information about the enterprise wireless networks. This person is planning on using this information to hack the wireless network. What type of attack is this?",
+        "img_url": null,
         "answers": [
             {
                 "text": "DoS",
@@ -1181,6 +1399,7 @@
     },
     {
         "question": "60. What service is provided by HTTP?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Uses encryption to secure the exchange of text, graphic images, sound, and video on the web.",
@@ -1202,6 +1421,7 @@
     },
     {
         "question": "61. A client packet is received by a server. The packet has a destination port number of 67. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "FTP",
@@ -1223,6 +1443,7 @@
     },
     {
         "question": "62. What are two problems that can be caused by a large number of ARP request and reply messages? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "Switches become overloaded because they concentrate all the traffic from the attached subnets.",
@@ -1248,6 +1469,7 @@
     },
     {
         "question": "63. A group of Windows PCs in a new subnet has been added to an Ethernet network. When testing the connectivity, a technician finds that these PCs can access local network resources but not the Internet resources. To troubleshoot the problem, the technician wants to initially confirm the IP address and DNS configurations on the PCs, and also verify connectivity to the local router. Which three Windows CLI commands and utilities will provide the necessary information? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "netsh interface ipv6 show neighbor",
@@ -1281,6 +1503,7 @@
     },
     {
         "question": "64. During the process of forwarding traffic, what will the router do immediately after matching the destination IP address to a network on a directly connected routing table entry?",
+        "img_url": null,
         "answers": [
             {
                 "text": "analyze the destination IP address",
@@ -1302,6 +1525,7 @@
     },
     {
         "question": "65. What characteristic describes antispyware?",
+        "img_url": null,
         "answers": [
             {
                 "text": "applications that protect end devices from becoming infected with malicious software",
@@ -1323,6 +1547,7 @@
     },
     {
         "question": "66. A network administrator needs to keep the user ID, password, and session contents private when establishing remote CLI connectivity with a switch to manage it. Which access method should be chosen?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Telnet",
@@ -1344,6 +1569,7 @@
     },
     {
         "question": "67. What are the two most effective ways to defend against malware? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "Implement a VPN.",
@@ -1373,6 +1599,7 @@
     },
     {
         "question": "68. Which type of security threat would be responsible if a spreadsheet add-on disables the local software firewall?",
+        "img_url": null,
         "answers": [
             {
                 "text": "brute-force attack",
@@ -1394,6 +1621,7 @@
     },
     {
         "question": "69. Which frame field is created by a source node and used by a destination node to ensure that a transmitted data signal has not been altered by interference, distortion, or signal loss?",
+        "img_url": null,
         "answers": [
             {
                 "text": "User Datagram Protocol field",
@@ -1419,6 +1647,7 @@
     },
     {
         "question": "70. A network administrator is adding a new LAN to a branch office. The new LAN must support 4 connected devices. What is the smallest network mask that the network administrator can use for the new network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "255.255.255.248",
@@ -1440,6 +1669,7 @@
     },
     {
         "question": "71. What service is provided by POP3?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Retrieves email from the server by downloading the email to the local mail application of the client.",
@@ -1461,6 +1691,7 @@
     },
     {
         "question": "72. What two security solutions are most likely to be used only in a corporate environment? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "antispyware",
@@ -1486,6 +1717,7 @@
     },
     {
         "question": "73. What characteristic describes antivirus software?",
+        "img_url": null,
         "answers": [
             {
                 "text": "applications that protect end devices from becoming infected with malicious software",
@@ -1507,6 +1739,7 @@
     },
     {
         "question": "74. What mechanism is used by a router to prevent a received IPv4 packet from traveling endlessly on a network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "It checks the value of the TTL field and if it is 0, it discards the packet and sends a Destination Unreachable message to the source host.",
@@ -1528,6 +1761,7 @@
     },
     {
         "question": "75. A client packet is received by a server. The packet has a destination port number of 69. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "DNS",
@@ -1549,6 +1783,7 @@
     },
     {
         "question": "76. An administrator defined a local user account with a secret password on router R1 for use with SSH. Which three additional steps are required to configure R1 to accept only encrypted SSH connections? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "Configure DNS on the router.",
@@ -1578,6 +1813,7 @@
     },
     {
         "question": "77. Which two functions are performed at the MAC sublayer of the OSI Data Link Layer to facilitate Ethernet communication? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "handles communication between upper layer networking software and Ethernet NIC hardware",
@@ -1603,6 +1839,7 @@
     },
     {
         "question": "78. An IPv6 enabled device sends a data packet with the destination address of FF02::2. What is the target of this packet?​",
+        "img_url": null,
         "answers": [
             {
                 "text": "all IPv6 enabled devices on the local link​",
@@ -1624,6 +1861,7 @@
     },
     {
         "question": "79. What are the three parts of an IPv6 global unicast address? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "subnet ID",
@@ -1649,6 +1887,7 @@
     },
     {
         "question": "80. A network administrator is designing the layout of a new wireless network. Which three areas of concern should be accounted for when building a wireless network? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "extensive cabling",
@@ -1678,6 +1917,7 @@
     },
     {
         "question": "81. A new network administrator has been asked to enter a banner message on a Cisco device. What is the fastest way a network administrator could test whether the banner is properly configured?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Enter CTRL-Z at the privileged mode prompt.",
@@ -1703,6 +1943,7 @@
     },
     {
         "question": "82. What method is used to manage contention-based access on a wireless network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "token passing",
@@ -1724,6 +1965,7 @@
     },
     {
         "question": "83. What is a function of the data link layer?",
+        "img_url": null,
         "answers": [
             {
                 "text": "provides the formatting of data",
@@ -1745,6 +1987,7 @@
     },
     {
         "question": "84. What is the purpose of the TCP sliding window?",
+        "img_url": null,
         "answers": [
             {
                 "text": "to ensure that segments arrive in order at the destination",
@@ -1766,6 +2009,7 @@
     },
     {
         "question": "85. What characteristic describes spyware?",
+        "img_url": null,
         "answers": [
             {
                 "text": "a network device that filters access and traffic coming into a network",
@@ -1787,6 +2031,7 @@
     },
     {
         "question": "86. Which switching method drops frames that fail the FCS check?",
+        "img_url": null,
         "answers": [
             {
                 "text": "store-and-forward switching",
@@ -1808,6 +2053,7 @@
     },
     {
         "question": "87. Which range of link-local addresses can be assigned to an IPv6-enabled interface?",
+        "img_url": null,
         "answers": [
             {
                 "text": "FEC0::/10",
@@ -1829,6 +2075,7 @@
     },
     {
         "question": "88. What service is provided by FTP?",
+        "img_url": null,
         "answers": [
             {
                 "text": "A basic set of rules for exchanging text, graphic images, sound, video, and other multimedia files on the web.",
@@ -1850,6 +2097,7 @@
     },
     {
         "question": "89. A user is attempting to access http://www.cisco.com/ without success. Which two configuration values must be set on the host to allow this access? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "DNS server",
@@ -1875,6 +2123,7 @@
     },
     {
         "question": "90. Which two statements accurately describe an advantage or a disadvantage when deploying NAT for IPv4 in a network? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "NAT adds authentication capability to IPv4.",
@@ -1904,6 +2153,7 @@
     },
     {
         "question": "91. What would be the interface ID of an IPv6 enabled interface with a MAC address of 1C-6F-65-C2-BD-F8 when the interface ID is generated by using the EUI-64 process?",
+        "img_url": null,
         "answers": [
             {
                 "text": "0C6F:65FF:FEC2:BDF8",
@@ -1925,6 +2175,7 @@
     },
     {
         "question": "92. Refer to the exhibit. PC1 issues an ARP request because it needs to send a packet to PC2. In this scenario, what will happen next?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2016/03/i209824v1n1_209824.jpg",
         "answers": [
             {
                 "text": "SW1 will send an ARP reply with the SW1 Fa0/1 MAC address.​",
@@ -1950,6 +2201,7 @@
     },
     {
         "question": "93. What service is provided by BOOTP?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Uses encryption to secure the exchange of text, graphic images, sound, and video on the web.",
@@ -1971,6 +2223,7 @@
     },
     {
         "question": "94. What characteristic describes adware?",
+        "img_url": null,
         "answers": [
             {
                 "text": "a network device that filters access and traffic coming into a network",
@@ -1992,6 +2245,7 @@
     },
     {
         "question": "95. When a switch configuration includes a user-defined error threshold on a per-port basis, to which switching method will the switch revert when the error threshold is reached?",
+        "img_url": null,
         "answers": [
             {
                 "text": "cut-through",
@@ -2012,7 +2266,34 @@
         ]
     },
     {
+        "question": "96. Match a statement to the related network model. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/2022-05-12_101113.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "97. What are two primary responsibilities of the Ethernet MAC sublayer? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "error detection",
@@ -2038,6 +2319,7 @@
     },
     {
         "question": "98. Refer to the exhibit. What three facts can be determined from the viewable output of the show ip interface brief command? (Choose three.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2016/03/i274067v1n1_274067.jpg",
         "answers": [
             {
                 "text": "Two physical interfaces have been configured.",
@@ -2066,7 +2348,30 @@
         ]
     },
     {
+        "question": "99. Match each type of frame field to its function. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/11.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "100. What is the subnet ID associated with the IPv6 address 2001:DA48:FC5:A4:3D1B::1/64?",
+        "img_url": null,
         "answers": [
             {
                 "text": "2001:DA48::/64​",
@@ -2087,7 +2392,30 @@
         ]
     },
     {
+        "question": "101. Match the firewall function to the type of threat protection it provides to the network. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/18.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "102. Users are reporting longer delays in authentication and in accessing network resources during certain time periods of the week. What kind of information should network engineers check to find out if this situation is part of a normal network behavior?",
+        "img_url": null,
         "answers": [
             {
                 "text": "syslog records and messages",
@@ -2109,6 +2437,7 @@
     },
     {
         "question": "103. How does the service password-encryption command enhance password security on Cisco routers and switches?",
+        "img_url": null,
         "answers": [
             {
                 "text": "It requires encrypted passwords to be used when connecting remotely to a router or switch with Telnet.",
@@ -2130,6 +2459,7 @@
     },
     {
         "question": "104. Which two statements are correct in a comparison of IPv4 and IPv6 packet headers? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "The Source Address field name from IPv4 is kept in IPv6.",
@@ -2154,7 +2484,38 @@
         ]
     },
     {
+        "question": "105. A network administrator wants to have the same network mask for all networks at a particular small site. The site has the following networks and number of devices:\nIP phones – 22 addresses\nPCs – 20 addresses needed\nPrinters – 2 addresses needed\nScanners – 2 addresses needed",
+        "img_url": null,
+        "answers": [
+            {
+                "text": "255.255.255.192",
+                "correct": false
+            },
+            {
+                "text": "255.255.255.252",
+                "correct": false
+            },
+            {
+                "text": "255.255.255.240",
+                "correct": false
+            },
+            {
+                "text": "255.255.255.248",
+                "correct": false
+            },
+            {
+                "text": "255.255.255.0",
+                "correct": false
+            },
+            {
+                "text": "255.255.255.224",
+                "correct": true
+            }
+        ]
+    },
+    {
         "question": "106. What characteristic describes identity theft?",
+        "img_url": null,
         "answers": [
             {
                 "text": "the use of stolen credentials to access private data",
@@ -2176,6 +2537,7 @@
     },
     {
         "question": "107. A network administrator is adding a new LAN to a branch office. The new LAN must support 200 connected devices. What is the smallest network mask that the network administrator can use for the new network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "255.255.255.240",
@@ -2197,6 +2559,7 @@
     },
     {
         "question": "108. What are three commonly followed standards for constructing and installing cabling? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "cost per meter (foot)",
@@ -2226,6 +2589,7 @@
     },
     {
         "question": "109. Refer to the exhibit. What is wrong with the displayed termination?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i274300v1n1_209630-300x221-1.png",
         "answers": [
             {
                 "text": "The woven copper braid should not have been removed.",
@@ -2246,7 +2610,30 @@
         ]
     },
     {
+        "question": "110. Match the characteristic to the category. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/38.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "111. A client packet is received by a server. The packet has a destination port number of 143. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "IMAP",
@@ -2268,6 +2655,7 @@
     },
     {
         "question": "112. What are two characteristics shared by TCP and UDP? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "default window size",
@@ -2297,6 +2685,7 @@
     },
     {
         "question": "113. Refer to the exhibit. Which two network addresses can be assigned to the network containing 10 hosts? Your answers should waste the fewest addresses, not reuse addresses that are already assigned, and stay within the 10.18.10.0/24 range of addresses. (Choose two.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i274518v1n1_247518.png",
         "answers": [
             {
                 "text": "10.18.10.200/28",
@@ -2326,6 +2715,7 @@
     },
     {
         "question": "114. A client packet is received by a server. The packet has a destination port number of 21. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "FTP",
@@ -2347,6 +2737,7 @@
     },
     {
         "question": "115. What attribute of a NIC would place it at the data link layer of the OSI model?",
+        "img_url": null,
         "answers": [
             {
                 "text": "attached Ethernet cable",
@@ -2372,6 +2763,7 @@
     },
     {
         "question": "116. A network administrator is adding a new LAN to a branch office. The new LAN must support 10 connected devices. What is the smallest network mask that the network administrator can use for the new network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "255.255.255.192",
@@ -2393,6 +2785,7 @@
     },
     {
         "question": "117. What technique is used with UTP cable to help protect against signal interference from crosstalk?",
+        "img_url": null,
         "answers": [
             {
                 "text": "wrapping a foil shield around the wire pairs",
@@ -2414,6 +2807,7 @@
     },
     {
         "question": "118. Refer to the exhibit. The network administrator has assigned the LAN of LBMISS an address range of 192.168.10.0. This address range has been subnetted using a /29 prefix. In order to accommodate a new building, the technician has decided to use the fifth subnet for configuring the new network (subnet zero is the first subnet). By company policies, the router interface is always assigned the first usable host address and the workgroup server is given the last usable host address. Which configuration should be entered into the properties of the workgroup server to allow connectivity to the Internet?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2017/05/i209840v1n3_209840.jpg",
         "answers": [
             {
                 "text": "IP address: 192.168.10.65 subnet mask: 255.255.255.240, default gateway: 192.168.10.76",
@@ -2439,6 +2833,7 @@
     },
     {
         "question": "119. Refer to the exhibit. The switches are in their default configuration. Host A needs to communicate with host D, but host A does not have the MAC address for its default gateway. Which network hosts will receive the ARP request sent by host A?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2016/03/i275353v1n1_275353.jpg",
         "answers": [
             {
                 "text": "only host D",
@@ -2467,7 +2862,34 @@
         ]
     },
     {
+        "question": "120. Match a statement to the related network model. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/2022-05-12_101113.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "121. Refer to the exhibit. A network engineer has been given the network address of 192.168.99.0 and a subnet mask of 255.255.255.192 to subnet across the four networks shown. How many total host addresses are unused across all four subnets?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/06/i304957v1n1_209418-1591171569.7915.png",
         "answers": [
             {
                 "text": "88",
@@ -2492,28 +2914,8 @@
         ]
     },
     {
-        "question": "122. Which connector is used with twisted-pair cabling in an Ethernet LAN?",
-        "answers": [
-            {
-                "text": "SSH",
-                "correct": true
-            },
-            {
-                "text": "SMB/CIFS",
-                "correct": false
-            },
-            {
-                "text": "HTTPS",
-                "correct": false
-            },
-            {
-                "text": "SLP",
-                "correct": false
-            }
-        ]
-    },
-    {
         "question": "123. A client packet is received by a server. The packet has a destination port number of 22. What service is the client requesting?",
+        "img_url": null,
         "answers": [
             {
                 "text": "SSH",
@@ -2535,6 +2937,7 @@
     },
     {
         "question": "124. What characteristic describes an IPS?",
+        "img_url": null,
         "answers": [
             {
                 "text": "a tunneling protocol that provides remote users with secure access into the network of an organization",
@@ -2556,6 +2959,7 @@
     },
     {
         "question": "125. What service is provided by DHCP?",
+        "img_url": null,
         "answers": [
             {
                 "text": "An application that allows real-time chatting among remote users.",
@@ -2576,7 +2980,38 @@
         ]
     },
     {
+        "question": "126. Match the header field with the appropriate layer of the OSI model. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/2020-03-26_173114.png",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "127. Refer to the exhibit. The switches have a default configuration. Host A needs to communicate with host D, but host A does not have the MAC address for the default gateway. Which network devices will receive the ARP request sent by host A?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/12/i360201v3n1_275353-1608482322.6606.png",
         "answers": [
             {
                 "text": "only host D",
@@ -2606,6 +3041,7 @@
     },
     {
         "question": "128. Which wireless technology has low-power and low-data rate requirements making it popular in IoT environments?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Bluetooth",
@@ -2627,6 +3063,7 @@
     },
     {
         "question": "129. What two ICMPv6 message types must be permitted through IPv6 access control lists to allow resolution of Layer 3 addresses to Layer 2 MAC addresses? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "neighbor solicitations",
@@ -2656,6 +3093,7 @@
     },
     {
         "question": "130. A client is using SLAAC to obtain an IPv6 address for its interface. After an address has been generated and applied to the interface, what must the client do before it can begin to use this IPv6 address?",
+        "img_url": null,
         "answers": [
             {
                 "text": "It must send a DHCPv6 INFORMATION-REQUEST message to request the address of the DNS server.",
@@ -2677,6 +3115,7 @@
     },
     {
         "question": "131. Two pings were issued from a host on a local network. The first ping was issued to the IP address of the default gateway of the host and it failed. The second ping was issued to the IP address of a host outside the local network and it was successful. What is a possible cause for the failed ping?",
+        "img_url": null,
         "answers": [
             {
                 "text": "The default gateway is not operational.",
@@ -2698,6 +3137,7 @@
     },
     {
         "question": "132. An organization is assigned an IPv6 address block of 2001:db8:0:ca00::/56. How many subnets can be created without using bits in the interface ID space?",
+        "img_url": null,
         "answers": [
             {
                 "text": "256",
@@ -2719,6 +3159,7 @@
     },
     {
         "question": "133. What subnet mask is needed if an IPv4 network has 40 devices that need IP addresses and address space is not to be wasted?",
+        "img_url": null,
         "answers": [
             {
                 "text": "255.255.255.0",
@@ -2744,6 +3185,7 @@
     },
     {
         "question": "134. Refer to the exhibit. If host A sends an IP packet to host B, what will the destination address be in the frame when it leaves host A?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i274590v1n1_274590.png",
         "answers": [
             {
                 "text": "DD:DD:DD:DD:DD:DD",
@@ -2773,6 +3215,7 @@
     },
     {
         "question": "135. What is a benefit of using cloud computing in networking?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Technology is integrated into every-day appliances allowing them to interconnect with other devices, making them more ‘smart’ or automated.",
@@ -2794,6 +3237,7 @@
     },
     {
         "question": "136. Which two statements are correct about MAC and IP addresses during data transmission if NAT is not involved? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "Destination IP addresses in a packet header remain constant along the entire path to a target host.",
@@ -2819,6 +3263,7 @@
     },
     {
         "question": "137. What is one main characteristic of the data link layer?",
+        "img_url": null,
         "answers": [
             {
                 "text": "It generates the electrical or optical signals that represent the 1 and 0 on the media.",
@@ -2840,6 +3285,7 @@
     },
     {
         "question": "138. What are three characteristics of the CSMA/CD process? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "The device with the electronic token is the only one that can transmit after a collision.",
@@ -2869,6 +3315,7 @@
     },
     {
         "question": "139. Which information does the show startup-config command display?",
+        "img_url": null,
         "answers": [
             {
                 "text": "the IOS image copied into RAM",
@@ -2890,6 +3337,7 @@
     },
     {
         "question": "140. Which two commands can be used on a Windows host to display the routing table? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "netstat -s",
@@ -2915,6 +3363,7 @@
     },
     {
         "question": "141. What are two functions that are provided by the network layer? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "directing data packets to destination hosts on other networks",
@@ -2940,6 +3389,7 @@
     },
     {
         "question": "142. Which two statements describe features of an IPv4 routing table on a router? (Choose two.)​",
+        "img_url": null,
         "answers": [
             {
                 "text": "Directly connected interfaces will have two route source codes in the routing table: C and S .",
@@ -2969,6 +3419,7 @@
     },
     {
         "question": "143. What characteristic describes a VPN?",
+        "img_url": null,
         "answers": [
             {
                 "text": "software on a router that filters traffic based on IP addresses or applications",
@@ -2990,6 +3441,7 @@
     },
     {
         "question": "144. Why would a Layer 2 switch need an IP address?",
+        "img_url": null,
         "answers": [
             {
                 "text": "to enable the switch to send broadcast frames to attached PCs",
@@ -3010,7 +3462,30 @@
         ]
     },
     {
+        "question": "145. Match each description to its corresponding term. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2019/12/2024-11-19_102334.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            }
+        ]
+    },
+    {
         "question": "146. A user sends an HTTP request to a web server on a remote network. During encapsulation for this request, what information is added to the address field of a frame to indicate the destination?",
+        "img_url": null,
         "answers": [
             {
                 "text": "the network domain of the destination host",
@@ -3032,6 +3507,7 @@
     },
     {
         "question": "147. What is an advantage to using a protocol that is defined by an open standard?",
+        "img_url": null,
         "answers": [
             {
                 "text": "A company can monopolize the market.",
@@ -3053,6 +3529,7 @@
     },
     {
         "question": "148. Data is being sent from a source PC to a destination server. Which three statements correctly describe the function of TCP or UDP in this situation? (Choose three.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "The source port field identifies the running application or service that will handle data returning to the PC.",
@@ -3081,7 +3558,34 @@
         ]
     },
     {
+        "question": "149. Match each description with the corresponding TCP mechanism. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/20.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "150. Refer to the exhibit. A company uses the address block of 128.107.0.0/16 for its network. What subnet mask would provide the maximum number of equal size subnets while providing enough host addresses for each subnet in the exhibit?",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/i207609v1n1_207609.png",
         "answers": [
             {
                 "text": "255.255.255.192",
@@ -3106,7 +3610,38 @@
         ]
     },
     {
+        "question": "152. Match each item to the type of topology diagram on which it is typically identified. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/24.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "153. What two pieces of information are displayed in the output of the show ip interface brief command? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "IP addresses",
@@ -3136,6 +3671,7 @@
     },
     {
         "question": "154. A user is complaining that an external web page is taking longer than normal to load.The web page does eventually load on the user machine. Which tool should the technician use with administrator privileges in order to locate where the issue is in the network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "ping",
@@ -3157,6 +3693,7 @@
     },
     {
         "question": "155. Which value, that is contained in an IPv4 header field, is decremented by each router that receives a packet?",
+        "img_url": null,
         "answers": [
             {
                 "text": "Header Length",
@@ -3178,6 +3715,7 @@
     },
     {
         "question": "156. A network technician is researching the use of fiber optic cabling in a new technology center. Which two issues should be considered before implementing fiber optic media? (Choose two.)",
+        "img_url": null,
         "answers": [
             {
                 "text": "Fiber optic cabling requires different termination and splicing expertise from what copper cabling requires.",
@@ -3202,7 +3740,34 @@
         ]
     },
     {
+        "question": "157. Match each description with an appropriate IP address. (Not all options are used.)",
+        "img_url": "https://itexamanswers.net/wp-content/uploads/2019/12/2024-11-19_104050.jpg",
+        "answers": [
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": false
+            },
+            {
+                "text": null,
+                "correct": true
+            },
+            {
+                "text": null,
+                "correct": false
+            }
+        ]
+    },
+    {
         "question": "158. A user is executing a tracert to a remote device. At what point would a router, which is in the path to the destination device, stop forwarding the packet?",
+        "img_url": null,
         "answers": [
             {
                 "text": "when the router receives an ICMP Time Exceeded message",
@@ -3228,6 +3793,7 @@
     },
     {
         "question": "159. Users report that the network access is slow. After questioning the employees, the network administrator learned that one employee downloaded a third-party scanning program for the printer. What type of malware might be introduced that causes slow performance of the network?",
+        "img_url": null,
         "answers": [
             {
                 "text": "virus",

@@ -13,6 +13,10 @@ main {
   min-height: calc(100vh - 100px); 
 }
 
+#questionImage {
+  max-width: 100%;
+  margin: 15px 0;
+}
 
 .card {
   background: #121212;
