@@ -517,7 +517,7 @@
         "answers": [
             {
                 "text": "malicious software or code running on an end device",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "an attack that slows or crashes a device or network service",
@@ -539,7 +539,7 @@
         "answers": [
             {
                 "text": "Uses encryption to provide secure remote access to network devices and servers.",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "Resolves domain names, such as cisco.com, into IP addresses.",
