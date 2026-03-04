@@ -250,27 +250,19 @@
         "img_url": "https://itexamanswers.net/wp-content/uploads/2020/01/2020-03-26_171754.png",
         "answers": [
             {
-                "text": "only application and Internet layers",
+                "text": null,
                 "correct": false
             },
             {
-                "text": "only Internet and network access layers",
+                "text": null,
                 "correct": false
             },
             {
-                "text": "only application, Internet, and network access layers",
-                "correct": false
-            },
-            {
-                "text": "application, transport, Internet, and network access layers",
+                "text": null,
                 "correct": true
             },
             {
-                "text": "only application, transport, network, data link, and physical layers",
-                "correct": false
-            },
-            {
-                "text": "application, session, transport, network, data link, and physical layers",
+                "text": null,
                 "correct": false
             }
         ]
@@ -517,7 +509,7 @@
         "answers": [
             {
                 "text": "malicious software or code running on an end device",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "an attack that slows or crashes a device or network service",
@@ -547,7 +539,7 @@
             },
             {
                 "text": "Uses encryption to secure the exchange of text, graphic images, sound, and video on the web.",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "Allows remote access to network devices and servers.",
@@ -889,11 +881,11 @@
         "answers": [
             {
                 "text": "security",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "quality of service",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "scalability",
@@ -909,7 +901,7 @@
             },
             {
                 "text": "fault tolerance",
-                "correct": false
+                "correct": true
             }
         ]
     },
@@ -919,7 +911,7 @@
         "answers": [
             {
                 "text": "improper termination",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "low-quality shielding in cable",
@@ -931,7 +923,7 @@
             },
             {
                 "text": "low-quality cable or connectors",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "loss of light over long distances",
@@ -957,32 +949,6 @@
             },
             {
                 "text": "192.168.1.64/29",
-                "correct": false
-            }
-        ]
-    },
-    {
-        "question": "192.168.1.64/26",
-        "img_url": null,
-        "answers": [
-            {
-                "text": "This host does not have a default gateway configured.",
-                "correct": false
-            },
-            {
-                "text": "There are 4 hops between this device and the device at 192.168.100.1.",
-                "correct": true
-            },
-            {
-                "text": "There is connectivity between this device and the device at 192.168.100.1.",
-                "correct": true
-            },
-            {
-                "text": "The connectivity between these two hosts allows for videoconferencing calls.",
-                "correct": false
-            },
-            {
-                "text": "The average transmission time between the two hosts is 2 milliseconds.",
                 "correct": false
             }
         ]
@@ -1821,7 +1787,7 @@
             },
             {
                 "text": "implements trailer with frame check sequence for error detection",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "places information in the Ethernet frame that identifies which network layer protocol is being encapsulated by the frame",
@@ -1829,7 +1795,7 @@
             },
             {
                 "text": "implements a process to delimit fields within an Ethernet 2 frame",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "adds Ethernet control information to network protocol data",
@@ -2423,7 +2389,7 @@
             },
             {
                 "text": "the network performance baseline",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "debug output and packet captures",
@@ -3431,7 +3397,7 @@
             },
             {
                 "text": "a tunneling protocol that provides remote users with secure access into the network of an organization",
-                "correct": false
+                "correct": true
             },
             {
                 "text": "a network device that filters access and traffic coming into a network",

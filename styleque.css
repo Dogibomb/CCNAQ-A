@@ -54,10 +54,6 @@ tr:hover {
   background: #1d4ed8;
 }
 
-.hidden {
-  display: none;
-}
-
 .correct-list li {
   color: #22c55e;
   font-weight: 600;
@@ -79,4 +75,51 @@ tr:hover {
 #questionsTable td:nth-child(4) {
   width: 200px;
   max-width: 300px;
+}
+
+.question-img {
+  max-width: 300px;
+  display: block;
+  margin-top: 8px;
+  border-radius: 6px;
+}
+
+.hidden {
+  display: none;
+}
+
+.revealed {
+  background: #22c55e;
+  color: white;
+}
+
+/* CLICKABLE IMAGE */
+.clickable-img {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+}
+
+.clickable-img:hover {
+  transform: scale(1.03);
+}
+
+/* OVERLAY */
+.image-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.image-overlay img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+
+.image-overlay.hidden {
+  display: none;
 }
