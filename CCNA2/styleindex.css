@@ -1,0 +1,91 @@
+main {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.card {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 800px;
+}
+
+#question {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+#questionImage {
+    margin: 0 auto 20px;
+    border: 1px solid #444;
+    border-radius: 8px;
+}
+
+/* Tlačítka odpovědí */
+#answers button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 12px;
+    background-color: #2a2a2a;
+    color: #eee;
+    border: 2px solid #333;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#answers button:hover {
+    background-color: #333;
+    border-color: #444;
+}
+
+/* Stavy vybrané / správně / špatně */
+#answers button.selected {
+    border-color: #3498db;
+    background-color: #1a2a3a;
+}
+
+#answers button.correct {
+    background-color: #1b4332 !important;
+    border-color: #2ecc71 !important;
+    color: #d8f3dc;
+}
+
+#answers button.wrong {
+    background-color: #432828 !important;
+    border-color: #e74c3c !important;
+    color: #f9dcc4;
+}
+
+#answers button.missed {
+    border: 2px dashed #f1c40f !important;
+}
+
+/* Spodní ovládání */
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#check, #next {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#check { background-color: #3498db; color: white; }
+#next { background-color: #555; color: white; }
+#check:hover { background-color: #2980b9; }
+#next:hover { background-color: #666; }

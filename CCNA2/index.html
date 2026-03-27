@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCNA Quiz - Interaktivní</title>
+  <link rel="stylesheet" href="styleindex.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="icon" type="image/png" href="cisco.svg">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-links">
+    <a href="index.html" class="active">Quiz</a>
+    <a href="questions.html">Questions</a>
+    <a href="../CCNA1/index.html">CCNA1</a>
+  </div>
+</nav>
+
+<main>
+  <section id="quizView">
+    <div class="card">
+      <h2 id="question">Načítám otázku...</h2>
+      
+      <div id="imageContainer" style="text-align:center; margin: 15px 0;">
+          <img id="questionImage" style="display:none; max-width:100%; border-radius: 5px; cursor: pointer;" />
+      </div>
+
+      <div id="answers">
+        </div>
+
+      <div class="controls">
+        <button id="check">Check</button>
+        <button id="next">Next</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="scriptindex.js"></script>
+</body>
+</html>

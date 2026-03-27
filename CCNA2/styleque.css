@@ -1,0 +1,67 @@
+.table-container {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 20px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+}
+
+th {
+    background-color: #252525;
+    color: #3498db;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.answers-list {
+    margin: 0;
+    padding-left: 20px;
+    color: #bbb;
+}
+
+.correct-list {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.reveal-btn {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.reveal-btn.revealed {
+    background-color: #444;
+    cursor: default;
+}
+
+/* Image zoom CSS */
+.image-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
