@@ -2,41 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CCNA Quiz - Interaktivní</title>
-  <link rel="stylesheet" href="styleindex.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070A0F">
+  <title>CCNA 2 Quiz</title>
   <link rel="stylesheet" href="navbar.css">
-  <link rel="icon" type="image/png" href="cisco.svg">
+  <link rel="stylesheet" href="styleindex.css">
+  <link rel="icon" type="image/svg+xml" href="cisco.svg">
 </head>
-<body>
+<body class="page-quiz">
 
-<nav class="navbar">
-  <div class="nav-links">
-    <a href="index.html" class="active">Quiz</a>
-    <a href="questions.html">Questions</a>
-    <a href="../index.html">CCNA1</a>
+<nav class="navbar" aria-label="Primary navigation">
+  <div class="navbar-shell">
+    <a class="nav-brand" href="index.html" aria-label="CCNA 2 Quiz home">
+      <span class="nav-brand-mark"><img src="cisco.svg" alt=""></span>
+      <span class="nav-brand-copy">
+        <strong>CCNA LAB</strong>
+        <span>Switching, Routing &amp; Wireless</span>
+      </span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="active" aria-current="page">Quiz</a>
+      <a href="questions.html">Questions</a>
+      <a href="../index.html">CCNA1</a>
+    </div>
   </div>
 </nav>
 
-<main>
-  <section id="quizView">
-    <div class="card">
-      <h2 id="question">Načítám otázku...</h2>
-      
-      <div id="imageContainer" style="text-align:center; margin: 15px 0;">
-          <img id="questionImage" style="display:none; max-width:100%; border-radius: 5px; cursor: pointer;" />
+<main class="quiz-main">
+  <section id="quizView" class="quiz-view" aria-live="polite">
+    <header class="quiz-intro">
+      <div>
+        <span class="page-kicker">Live practice session</span>
+        <h1 class="page-title">Packet-ready CCNA drills.</h1>
+        <p class="page-subtitle">Pick an answer, verify the route, and keep moving through the CCNA 2 question bank.</p>
       </div>
+      <div class="session-chip" aria-label="Current module">
+        <span class="session-chip-dot"></span>
+        CCNA 2
+      </div>
+    </header>
 
-      <div id="answers">
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-card-glow" aria-hidden="true"></div>
+
+      <div class="card-topbar">
+        <div class="question-meta" aria-label="Question metadata">
+          <span class="meta-pill meta-pill-primary" id="questionBadge">QUESTION</span>
+          <span class="meta-pill">CCNA 2</span>
+          <span class="meta-pill" id="topicBadge" hidden></span>
         </div>
 
+        <div class="progress-block">
+          <div class="progress-copy">
+            <span id="progressLabel">Loading question bank…</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <span id="progressFill" class="progress-fill"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-stage" id="questionStage">
+        <div class="question-lead">
+          <span class="question-pulse" aria-hidden="true"></span>
+          <span>ROUTE ANALYSIS</span>
+        </div>
+        <h2 id="question">Loading question…</h2>
+
+        <div id="imageContainer" class="exhibit" hidden>
+          <div class="exhibit-header">
+            <span>EXHIBIT</span>
+            <span>Click to inspect</span>
+          </div>
+          <button type="button" id="exhibitTrigger" class="exhibit-trigger" aria-label="Open exhibit in fullscreen">
+            <img id="questionImage" alt="Question exhibit">
+            <span class="exhibit-zoom-hint" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="icon"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4.2-4.2M8 11h6M11 8v6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              Expand
+            </span>
+          </button>
+          <div class="exhibit-error" id="exhibitError" hidden>Exhibit could not be loaded.</div>
+        </div>
+
+        <div id="answers" class="answers" role="group" aria-label="Answer options"></div>
+        <div id="answerEmptyState" class="answer-empty" hidden>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M5 5h14v14H5zM8 9h8M8 12h6M8 15h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <div>
+            <strong>No interactive answer choices in this record.</strong>
+            <span>Use Next to continue or review the full record on the Questions page.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="packet-verifier" id="packetVerifier" aria-hidden="true">
+        <div class="verifier-label">PACKET VERIFY</div>
+        <div class="route-visual">
+          <span class="route-node route-node-source"></span>
+          <span class="route-segment route-segment-a"></span>
+          <span class="route-node route-node-mid"></span>
+          <span class="route-segment route-segment-b"></span>
+          <span class="route-node route-node-destination" id="verifyNode">
+            <svg viewBox="0 0 24 24" class="verify-check"><path d="m6.8 12.5 3.2 3.2 7.2-7.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg viewBox="0 0 24 24" class="verify-x"><path d="m8 8 8 8M16 8l-8 8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="packet-light"></span>
+        </div>
+        <div class="verifier-status" id="verifierStatus">Awaiting route</div>
+      </div>
+
+      <div id="feedback" class="feedback" aria-live="assertive"></div>
+
       <div class="controls">
-        <button id="check">Check</button>
-        <button id="next">Next</button>
+        <button id="check" class="action-btn action-btn-primary" type="button">
+          <span>Check answer</span>
+          <svg viewBox="0 0 24 24" class="icon"><path d="m7 12.5 3.2 3.2L17.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="next" class="action-btn action-btn-secondary" type="button">
+          <span>Next question</span>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M5 12h13m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="keyboard-hints" aria-hidden="true">
+        <span><kbd>1–4</kbd> Select</span>
+        <span><kbd>Enter</kbd> Check</span>
+        <span><kbd>→</kbd> Next</span>
       </div>
     </div>
   </section>
 </main>
 
+<div id="quizImageOverlay" class="image-overlay hidden" aria-hidden="true">
+  <button id="quizImageClose" class="image-overlay-close" type="button" aria-label="Close fullscreen exhibit">
+    <svg viewBox="0 0 24 24" class="icon"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <div class="overlay-frame">
+    <img class="overlay-img" id="quizOverlayImage" src="" alt="Fullscreen question exhibit">
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="ui.js"></script>
 <script src="scriptindex.js"></script>
 </body>
 </html>

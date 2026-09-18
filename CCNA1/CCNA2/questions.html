@@ -2,38 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CCNA - Seznam otázek</title>
-  <link rel="stylesheet" href="styleque.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070A0F">
+  <title>CCNA 2 Question Database</title>
   <link rel="stylesheet" href="navbar.css">
-  <link rel="icon" type="image/png" href="cisco.svg">
+  <link rel="stylesheet" href="styleque.css">
+  <link rel="icon" type="image/svg+xml" href="cisco.svg">
 </head>
-<body>
+<body class="page-questions">
 
-<nav class="navbar">
-  <div class="nav-links">
-    <a href="index.html">Quiz</a>
-    <a href="questions.html" class="active">Questions</a>
+<nav class="navbar" aria-label="Primary navigation">
+  <div class="navbar-shell">
+    <a class="nav-brand" href="index.html" aria-label="CCNA 2 Quiz home">
+      <span class="nav-brand-mark"><img src="cisco.svg" alt=""></span>
+      <span class="nav-brand-copy">
+        <strong>CCNA LAB</strong>
+        <span>Switching, Routing &amp; Wireless</span>
+      </span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html">Quiz</a>
+      <a href="questions.html" class="active" aria-current="page">Questions</a>
+      <a href="../index.html">CCNA1</a>
+    </div>
   </div>
 </nav>
 
-<div class="table-container">
-  <table id="questionsTable">
-    <thead>
-      <tr>
-        <th style="width: 40%;">Question</th>
-        <th style="width: 35%;">Options</th>
-        <th style="width: 25%;">Correct Answer</th>
-      </tr>
-    </thead>
-    <tbody>
-      </tbody>
-  </table>
+<main class="database-main">
+  <section class="database-shell">
+    <header class="database-hero">
+      <div>
+        <span class="page-kicker">Routing table archive</span>
+        <h1 class="page-title">Question database</h1>
+        <p class="page-subtitle">Browse every CCNA 2 record, inspect exhibits, search option text, and reveal the verified answer without leaving the page.</p>
+      </div>
+
+      <div class="database-status">
+        <span class="database-status-dot"></span>
+        DATASET ONLINE
+      </div>
+    </header>
+
+    <section class="database-toolbar" aria-label="Question database controls">
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span class="stat-label">Total questions</span>
+          <strong class="stat-value" id="totalQuestions">—</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">With exhibits</span>
+          <strong class="stat-value" id="exhibitQuestions">—</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Visible records</span>
+          <strong class="stat-value" id="visibleQuestions">—</strong>
+        </article>
+      </div>
+
+      <label class="search-wrap" for="questionSearch">
+        <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4.2-4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <input id="questionSearch" type="search" placeholder="Search questions, options, or number…" autocomplete="off">
+        <kbd>/</kbd>
+      </label>
+    </section>
+
+    <section class="records-panel" aria-label="CCNA question records">
+      <div class="records-head" aria-hidden="true">
+        <span>Question</span>
+        <span>Options</span>
+        <span>Verified answer</span>
+      </div>
+
+      <div id="questionsList" class="questions-list"></div>
+
+      <div id="noResults" class="no-results" hidden>
+        <div class="no-results-icon">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4.2-4.2M8.5 11h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <strong>No matching questions found.</strong>
+        <span>Try a different keyword, option text, or question number.</span>
+      </div>
+
+      <div id="loadError" class="no-results" hidden>
+        <div class="no-results-icon danger-icon">!</div>
+        <strong>Question database unavailable.</strong>
+        <span>Check that ccna.json is in this folder and reload the page.</span>
+      </div>
+    </section>
+  </section>
+</main>
+
+<div id="imageOverlay" class="image-overlay hidden" aria-hidden="true">
+  <button id="closeImageOverlay" class="image-overlay-close" type="button" aria-label="Close fullscreen exhibit">
+    <svg viewBox="0 0 24 24" class="icon"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <div class="overlay-frame">
+    <img class="overlay-img" src="" alt="Fullscreen question exhibit">
+  </div>
 </div>
 
-<div id="imageOverlay" class="image-overlay hidden">
-    <img class="overlay-img" src="" alt="Zoomed view">
-</div>
-
+<script src="ui.js"></script>
 <script src="scriptque.js"></script>
 </body>
 </html>
