@@ -21,6 +21,15 @@
       </span>
     </a>
 
+    <label class="topic-filter" for="topicFilter">
+      <span class="visually-hidden">Filter questions by topic</span>
+      <svg viewBox="0 0 24 24" class="icon topic-filter-icon" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <select id="topicFilter" disabled>
+        <option value="all">All topics</option>
+      </select>
+      <svg viewBox="0 0 24 24" class="icon topic-filter-chevron" aria-hidden="true"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </label>
+
     <div class="nav-links">
       <a href="index.html" class="active" aria-current="page">Quiz</a>
       <a href="questions.html">Questions</a>
@@ -31,44 +40,13 @@
 
 <main class="quiz-main">
   <section id="quizView" class="quiz-view" aria-live="polite">
-    <header class="quiz-intro">
-      <div>
-        <span class="page-kicker">Live practice session</span>
-        <h1 class="page-title">Packet-ready CCNA drills.</h1>
-        <p class="page-subtitle">Pick an answer, verify the route, and keep moving through the CCNA 2 question bank.</p>
-      </div>
-      <div class="session-chip" aria-label="Current module">
-        <span class="session-chip-dot"></span>
-        CCNA 2
-      </div>
-    </header>
-
     <div class="quiz-card" id="quizCard">
-      <div class="quiz-card-glow" aria-hidden="true"></div>
-
       <div class="card-topbar">
-        <div class="question-meta" aria-label="Question metadata">
-          <span class="meta-pill meta-pill-primary" id="questionBadge">QUESTION</span>
-          <span class="meta-pill">CCNA 2</span>
-          <span class="meta-pill" id="topicBadge" hidden></span>
-        </div>
-
-        <div class="progress-block">
-          <div class="progress-copy">
-            <span id="progressLabel">Loading question bank…</span>
-            <span id="progressPercent">0%</span>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <span id="progressFill" class="progress-fill"></span>
-          </div>
-        </div>
+        <span class="meta-pill meta-pill-primary" id="questionBadge">QUESTION</span>
+        <span class="meta-pill" id="topicBadge" hidden></span>
       </div>
 
       <div class="question-stage" id="questionStage">
-        <div class="question-lead">
-          <span class="question-pulse" aria-hidden="true"></span>
-          <span>ROUTE ANALYSIS</span>
-        </div>
         <h2 id="question">Loading question…</h2>
 
         <div id="imageContainer" class="exhibit" hidden>
@@ -96,31 +74,19 @@
         </div>
       </div>
 
-      <div class="packet-verifier" id="packetVerifier" aria-hidden="true">
-        <div class="verifier-label">PACKET VERIFY</div>
-        <div class="route-visual">
-          <span class="route-node route-node-source"></span>
-          <span class="route-segment route-segment-a"></span>
-          <span class="route-node route-node-mid"></span>
-          <span class="route-segment route-segment-b"></span>
-          <span class="route-node route-node-destination" id="verifyNode">
-            <svg viewBox="0 0 24 24" class="verify-check"><path d="m6.8 12.5 3.2 3.2 7.2-7.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <svg viewBox="0 0 24 24" class="verify-x"><path d="m8 8 8 8M16 8l-8 8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-          </span>
-          <span class="packet-light"></span>
-        </div>
-        <div class="verifier-status" id="verifierStatus">Awaiting route</div>
-      </div>
-
       <div id="feedback" class="feedback" aria-live="assertive"></div>
 
       <div class="controls">
-        <button id="check" class="action-btn action-btn-primary" type="button">
+        <button id="prev" class="action-btn action-btn-secondary action-btn-prev" type="button" disabled>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M19 12H6m5-5-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Previous<span class="label-extra"> question</span></span>
+        </button>
+        <button id="check" class="action-btn action-btn-primary action-btn-check" type="button" disabled>
           <span>Check answer</span>
           <svg viewBox="0 0 24 24" class="icon"><path d="m7 12.5 3.2 3.2L17.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button id="next" class="action-btn action-btn-secondary" type="button">
-          <span>Next question</span>
+        <button id="next" class="action-btn action-btn-secondary action-btn-next" type="button" disabled>
+          <span>Next<span class="label-extra"> question</span></span>
           <svg viewBox="0 0 24 24" class="icon"><path d="M5 12h13m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
@@ -128,6 +94,7 @@
       <div class="keyboard-hints" aria-hidden="true">
         <span><kbd>1–4</kbd> Select</span>
         <span><kbd>Enter</kbd> Check</span>
+        <span><kbd>←</kbd><kbd>P</kbd> Previous</span>
         <span><kbd>→</kbd> Next</span>
       </div>
     </div>
