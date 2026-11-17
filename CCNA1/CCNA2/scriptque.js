@@ -21,6 +21,7 @@ fetch("ccna.json")
   .then((data) => {
     if (!Array.isArray(data)) throw new Error("Question bank is not an array.");
     allQuestions = data;
+    if (window.CCNAStorage) window.CCNAStorage.syncNavbarBadges(data);
     updateStats(data);
     buildRecords(data);
     setupObserver();
@@ -48,6 +49,11 @@ function getTopic(question) {
 }
 
 function getCorrectAnswers(question) {
+  if (window.CCNAStorage) {
+    const progress = window.CCNAStorage.loadProgress();
+    const effective = window.CCNAStorage.getEffectiveCorrectAnswers(question, progress.customOverrides);
+    if (effective.length) return effective;
+  }
   if (Array.isArray(question.correct_answer)) return question.correct_answer;
   return question.correct_answer ? [question.correct_answer] : [];
 }
@@ -76,7 +82,8 @@ function buildRecords(questions) {
 
     const meta = document.createElement("div");
     meta.className = "record-meta";
-    meta.innerHTML = `<span class="record-number">Q${number}</span><span class="record-topic"></span>`;
+    const isFlagged = window.CCNAStorage?.isQuestionFlagged(number);
+    meta.innerHTML = `<span class="record-number">Q${number}</span><span class="record-topic"></span>${isFlagged ? '<span class="record-flag-pill">⚑ FLAGGED</span>' : ''}`;
     meta.querySelector(".record-topic").textContent = getTopic(question);
 
     const questionText = document.createElement("p");
@@ -84,6 +91,15 @@ function buildRecords(questions) {
     questionText.textContent = cleanQuestionText(question.question);
 
     questionCell.append(meta, questionText);
+
+    const savedNote = window.CCNAStorage ? window.CCNAStorage.getQuestionNote(number) : "";
+    if (savedNote) {
+      const noteEl = document.createElement("div");
+      noteEl.className = "record-note";
+      noteEl.innerHTML = `<span class="note-badge">NOTE</span> <span class="note-text"></span>`;
+      noteEl.querySelector(".note-text").textContent = savedNote;
+      questionCell.appendChild(noteEl);
+    }
 
     if (question.image_url) {
       const imageButton = document.createElement("button");

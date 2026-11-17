@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "cmd.exe",
+      "args": ["/c", "npx", "-y", "shadcn@latest", "mcp"]
+    },
+    "motion": {
+      "serverUrl": "https://mcp.motion.dev"
+    },
+    "motion-plus": {
+      "serverUrl": "https://mcp.motion.dev/plus"
+    }
+  }
+}

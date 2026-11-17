@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "project": {
+    "name": "portfolio",
+    "productType": null,
+    "stack": [
+      "nextjs",
+      "react",
+      "shadcn",
+      "tailwind-v4"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/app/globals.css"
+    ],
+    "components": [
+      "src/components/ui"
+    ],
+    "assets": [],
+    "instructions": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {
+      "--color-background": {
+        "value": "#fafaf7",
+        "source": "src/app/globals.css"
+      },
+      "--color-foreground": {
+        "value": "#18181b",
+        "source": "src/app/globals.css"
+      },
+      "--color-muted": {
+        "value": "#52525b",
+        "source": "src/app/globals.css"
+      },
+      "--color-border": {
+        "value": "#e4e4e7",
+        "source": "src/app/globals.css"
+      },
+      "--color-accent": {
+        "value": "#1d4ed8",
+        "source": "src/app/globals.css"
+      },
+      "--color-accent-hover": {
+        "value": "#1e40af",
+        "source": "src/app/globals.css"
+      }
+    },
+    "typography": {
+      "--font-sans": {
+        "value": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "source": "src/app/globals.css"
+      }
+    },
+    "spacing": {
+      "--container-site": {
+        "value": "70rem",
+        "source": "src/app/globals.css"
+      },
+      "--spacing-gutter": {
+        "value": "clamp(1.25rem, 4vw, 2.5rem)",
+        "source": "src/app/globals.css"
+      },
+      "--spacing-section": {
+        "value": "clamp(3rem, 6vw, 6rem)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "radius": {},
+    "shadows": {},
+    "motion": {},
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [],
+    "avoid": []
+  },
+  "decisions": [],
+  "evidence": [
+    {
+      "fact": "components.installed",
+      "source": "src/components/ui"
+    },
+    {
+      "fact": "design.colorMode:light",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "CLAUDE.md"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:shadcn",
+      "source": "components.json"
+    },
+    {
+      "fact": "project.stack:tailwind-v4",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-09-26T11:00:17.834Z"
+}

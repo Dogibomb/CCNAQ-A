@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070A0F">
+  <title>CCNA 2 — Review &amp; Progress Tracker</title>
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="styleque.css">
+  <link rel="stylesheet" href="styleindex.css">
+  <link rel="icon" type="image/svg+xml" href="cisco.svg">
+</head>
+<body class="page-questions">
+
+<nav class="navbar" aria-label="Primary navigation">
+  <div class="navbar-shell">
+    <a class="nav-brand" href="index.html" aria-label="CCNA 2 Quiz home">
+      <span class="nav-brand-mark"><img src="cisco.svg" alt=""></span>
+      <span class="nav-brand-copy">
+        <strong>CCNA LAB</strong>
+        <span>Switching, Routing &amp; Wireless</span>
+      </span>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html">Quiz</a>
+      <a href="questions.html">Questions</a>
+      <a href="unanswered.html">No Answer <span class="nav-badge nav-unanswered-badge">(8)</span></a>
+      <a href="review.html" class="active" aria-current="page">Review</a>
+      <a href="../index.html">CCNA1</a>
+    </div>
+  </div>
+</nav>
+
+<main class="database-main">
+  <section class="database-shell">
+    <header class="database-hero">
+      <div>
+        <span class="page-kicker">Study performance</span>
+        <h1 class="page-title">Review &amp; progress</h1>
+        <p class="page-subtitle">Track your mistake frequency, analyze drill completion history, inspect personalized notes, and target weak CCNA 2 topics.</p>
+      </div>
+
+      <div class="toolbar-actions">
+        <button type="button" class="toolbar-action-btn btn-danger" id="resetProgressBtn" title="Reset all completion history and mistakes">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Reset Progress</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="database-toolbar" aria-label="Review summary statistics">
+      <div class="stats-grid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+        <article class="stat-card">
+          <span class="stat-label">Completed</span>
+          <strong class="stat-value" id="statCompleted">0 / 172</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Mistakes to review</span>
+          <strong class="stat-value" id="statMistakes" style="color:var(--danger);">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Overall accuracy</span>
+          <strong class="stat-value" id="statAccuracy" style="color:var(--success);">—</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Flagged</span>
+          <strong class="stat-value" id="statFlagged" style="color:var(--warning);">0</strong>
+        </article>
+      </div>
+
+      <label class="search-wrap" for="reviewSearch">
+        <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm9 16-4.2-4.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <input id="reviewSearch" type="search" placeholder="Search questions, answers, or notes…" autocomplete="off">
+        <kbd>/</kbd>
+      </label>
+    </section>
+
+    <!-- Sub-view Navigation Switcher -->
+    <nav class="subview-nav" aria-label="Review sub-views">
+      <button type="button" class="subview-tab active" data-view="mistakes" id="tabMistakes">
+        <span>Mistakes to Review</span>
+        <span class="subview-badge" id="badgeMistakesCount">0</span>
+      </button>
+      <button type="button" class="subview-tab" data-view="completed" id="tabCompleted">
+        <span>Completed History</span>
+        <span class="subview-badge" id="badgeCompletedCount">0</span>
+      </button>
+      <button type="button" class="subview-tab" data-view="topics" id="tabTopics">
+        <span>Topic Accuracy Breakdown</span>
+      </button>
+    </nav>
+
+    <!-- Sub-view 1: Mistakes -->
+    <section id="viewMistakes" class="review-subview-panel">
+      <div class="mistakes-action-bar" id="mistakesActionBar">
+        <div class="mistakes-action-copy">
+          <strong id="mistakesTitleCount">Ready to drill your mistakes?</strong>
+          <span>Focus strictly on the questions you previously answered incorrectly.</span>
+        </div>
+        <a href="index.html?filter=mistakes" class="btn-practice-mistakes" id="practiceMistakesBtn">
+          <span>Practice Mistakes Only</span>
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="records-panel" style="margin-top:20px;">
+        <div class="records-head" aria-hidden="true">
+          <span>Question</span>
+          <span>Your answer vs. Verified answer</span>
+          <span>Action / Mastery</span>
+        </div>
+        <div id="mistakesList" class="questions-list"></div>
+        <div id="mistakesEmpty" class="no-results" hidden>
+          <div class="no-results-icon" style="color:var(--success);">✓</div>
+          <strong>No mistakes to review!</strong>
+          <span>All completed drill questions have been mastered or answered correctly.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sub-view 2: Completed History -->
+    <section id="viewCompleted" class="review-subview-panel" hidden>
+      <div class="records-panel" style="margin-top:20px;">
+        <div class="records-head" aria-hidden="true">
+          <span>Question</span>
+          <span>Result &amp; Options</span>
+          <span>Status &amp; Practice</span>
+        </div>
+        <div id="completedList" class="questions-list"></div>
+        <div id="completedEmpty" class="no-results" hidden>
+          <div class="no-results-icon">
+            <svg viewBox="0 0 24 24" class="icon"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <strong>No completed questions yet.</strong>
+          <span>Start a drill session in Quiz to see your completion timeline and answer outcomes.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sub-view 3: Topic Breakdown -->
+    <section id="viewTopics" class="review-subview-panel" hidden>
+      <div class="topic-breakdown-grid" id="topicsList"></div>
+    </section>
+
+  </section>
+</main>
+
+<div id="imageOverlay" class="image-overlay hidden" aria-hidden="true">
+  <button id="closeImageOverlay" class="image-overlay-close" type="button" aria-label="Close fullscreen exhibit">
+    <svg viewBox="0 0 24 24" class="icon"><path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <div class="overlay-frame">
+    <img class="overlay-img" src="" alt="Fullscreen question exhibit">
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="ui.js"></script>
+<script src="storage.js"></script>
+<script src="scriptrev.js"></script>
+</body>
+</html>

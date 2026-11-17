@@ -716,3 +716,306 @@ kbd {
     display: none;
   }
 }
+
+/* ==========================================================================
+   CCNA 2 — Study Tools, Notes, Shuffle, & Mock Exam Styles
+   ========================================================================== */
+
+.topbar-meta-group,
+.topbar-tools-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(100, 190, 255, 0.12);
+  border-radius: 8px;
+  color: var(--text-muted);
+  background: rgba(9, 15, 23, 0.72);
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 160ms var(--ease-quick);
+}
+
+.tool-btn:hover {
+  border-color: rgba(75, 217, 255, 0.35);
+  color: #dbeeff;
+  background: rgba(18, 27, 39, 0.9);
+}
+
+.tool-btn.is-active {
+  border-color: rgba(75, 217, 255, 0.45);
+  color: #fff;
+  background: linear-gradient(180deg, rgba(46, 168, 255, 0.22), rgba(46, 168, 255, 0.1));
+  box-shadow: 0 0 12px rgba(46, 168, 255, 0.2);
+}
+
+.flag-btn.is-flagged {
+  border-color: rgba(255, 204, 102, 0.45);
+  color: #ffe699;
+  background: rgba(255, 204, 102, 0.14);
+}
+
+.flag-btn.is-flagged svg {
+  fill: currentColor;
+}
+
+.exam-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 85, 116, 0.35);
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 850;
+  color: #ff9cb0;
+  background: rgba(255, 85, 116, 0.12);
+  animation: pulse-timer 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-timer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+/* Personal Study Note Box */
+.note-box {
+  margin-top: 16px;
+  border: 1px solid rgba(100, 190, 255, 0.09);
+  border-radius: 12px;
+  background: rgba(10, 16, 25, 0.58);
+  overflow: hidden;
+  transition: border-color 180ms var(--ease-quick);
+}
+
+.note-box:hover,
+.note-box:focus-within {
+  border-color: rgba(75, 217, 255, 0.25);
+}
+
+.note-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-align: left;
+  transition: color 150ms var(--ease-quick);
+}
+
+.note-toggle-btn:hover {
+  color: var(--text-muted);
+}
+
+.note-toggle-btn.has-note {
+  color: #aedeff;
+}
+
+.note-content-panel {
+  padding: 0 14px 14px;
+}
+
+.note-content-panel textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(100, 190, 255, 0.13);
+  border-radius: 9px;
+  background: rgba(6, 11, 17, 0.82);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  resize: vertical;
+  outline: none;
+  transition: border-color 170ms var(--ease-quick);
+}
+
+.note-content-panel textarea:focus {
+  border-color: var(--primary-light);
+}
+
+.note-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.note-save-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 13px;
+  border: 1px solid rgba(75, 217, 255, 0.25);
+  border-radius: 7px;
+  font-size: 0.72rem;
+  font-weight: 850;
+  color: #fff;
+  background: linear-gradient(180deg, #1d95ec, #1480cf);
+  cursor: pointer;
+  transition: all 150ms var(--ease-quick);
+}
+
+.note-save-btn:hover {
+  background: #2ea8ff;
+  transform: translateY(-1px);
+}
+
+.note-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid rgba(100, 190, 255, 0.1);
+  border-radius: 7px;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  background: transparent;
+  cursor: pointer;
+  transition: all 150ms var(--ease-quick);
+}
+
+.note-clear-btn:hover {
+  color: var(--danger);
+  border-color: rgba(255, 85, 116, 0.3);
+}
+
+/* Exam Mode UI */
+.is-exam-mode .action-btn-check {
+  display: none !important;
+}
+
+.is-exam-mode #finishExam {
+  display: inline-flex !important;
+}
+
+.exam-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(3, 6, 11, 0.88);
+  backdrop-filter: blur(16px);
+  opacity: 1;
+  transition: opacity 220ms var(--ease-ui);
+}
+
+.exam-modal-box {
+  width: min(600px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  border: 1px solid rgba(100, 190, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(13, 20, 30, 0.96);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  animation: modal-image-in 380ms var(--ease-out-expo) both;
+}
+
+.exam-score-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 0;
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: rgba(46, 168, 255, 0.08);
+  border: 1px solid rgba(46, 168, 255, 0.2);
+}
+
+.exam-score-banner.is-pass {
+  background: rgba(55, 230, 154, 0.09);
+  border-color: rgba(55, 230, 154, 0.3);
+}
+
+.exam-score-banner.is-fail {
+  background: rgba(255, 85, 116, 0.09);
+  border-color: rgba(255, 85, 116, 0.3);
+}
+
+.exam-score-large {
+  font-size: 2.2rem;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.exam-badge-pass {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.exam-score-banner.is-pass .exam-badge-pass {
+  color: #071810;
+  background: var(--success);
+}
+
+.exam-score-banner.is-fail .exam-badge-pass {
+  color: #fff;
+  background: var(--danger);
+}
+
+.exam-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(8, 13, 20, 0.6);
+  margin-bottom: 18px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.exam-stats-row strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--text);
+  margin-top: 2px;
+}
+
+.exam-topic-breakdown {
+  display: grid;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.exam-topic-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.78rem;
+}
+
+.exam-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}

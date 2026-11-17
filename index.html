@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#06080d">
+  <meta name="description" content="CCNA LAB — High-speed, packet-ready drills for Cisco Switching, Routing & Wireless certification. Real exam exhibits, state-preserving practice, and zero-latency review.">
+  <title>CCNA LAB — Switching, Routing &amp; Wireless Drills</title>
+  <link rel="icon" type="image/svg+xml" href="CCNA1/CCNA2/cisco.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-home">
+
+  <!-- Ambient Obsidian Depth (Atmospheric backdrop with zero mouse-tracking gimmickry) -->
+  <div class="ambient-canvas" aria-hidden="true">
+    <div class="ambient-glow ambient-glow-top"></div>
+    <div class="ambient-glow ambient-glow-right"></div>
+    <div class="ambient-mesh"></div>
+  </div>
+
+  <!-- Primary Header & Global Navigation -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-shell">
+      <a href="index.html" class="brand" aria-label="CCNA LAB Home">
+        <span class="brand-icon">
+          <img src="CCNA1/CCNA2/cisco.svg" alt="" width="22" height="22">
+        </span>
+        <div class="brand-text">
+          <strong class="brand-title">CCNA LAB</strong>
+          <span class="brand-subtitle">Switching, Routing &amp; Wireless</span>
+        </div>
+      </a>
+
+      <nav class="nav-desktop" aria-label="Main Navigation">
+        <a href="#workflow" class="nav-link">Methodology</a>
+        <a href="#domains" class="nav-link">Syllabus</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="CCNA1/CCNA2/questions.html" class="nav-link">Question Bank</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="CCNA1/index.html" class="btn btn-ghost" title="Explore CCNA 1 Introduction to Networks">CCNA 1</a>
+        <a href="CCNA1/CCNA2/index.html" class="btn btn-primary" title="Launch Interactive CCNA 2 Drills">
+          <span>Start Drill</span>
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainContent">
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero-section" id="hero">
+      <div class="section-container">
+        
+        <div class="hero-copy-block">
+          <div class="badge-kicker">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span>CCNA 200-301 Certification Practice</span>
+          </div>
+
+          <h1 class="hero-headline">
+            Cisco routing drills built for <span class="text-gradient">muscle memory.</span>
+          </h1>
+
+          <p class="hero-subtext">
+            Cut through passive question dumps. Inspect authentic routing tables, verify packet forwarding paths, and master enterprise switching through keyboard-accelerated drills.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="CCNA1/CCNA2/index.html" class="btn btn-lg btn-primary">
+              <span>Launch CCNA 2 Drills</span>
+              <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#workflow" class="btn btn-lg btn-secondary">
+              <span>Inspect Mechanics</span>
+            </a>
+          </div>
+
+          <div class="hero-proof-bar" aria-label="Key Product Facts">
+            <div class="proof-item">
+              <strong>172</strong>
+              <span>Verified Records</span>
+            </div>
+            <div class="proof-divider" aria-hidden="true"></div>
+            <div class="proof-item">
+              <strong>16</strong>
+              <span>Topic Domains</span>
+            </div>
+            <div class="proof-divider" aria-hidden="true"></div>
+            <div class="proof-item">
+              <strong>0 ms</strong>
+              <span>Client Latency</span>
+            </div>
+            <div class="proof-divider" aria-hidden="true"></div>
+            <div class="proof-item">
+              <strong>100%</strong>
+              <span>Keyboard Driven</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Authentic Interactive App Preview in Hero -->
+        <div class="hero-preview-frame" id="heroPreview">
+          <div class="app-window" role="region" aria-label="Live Interactive Drill Preview">
+            
+            <div class="window-titlebar">
+              <div class="window-controls" aria-hidden="true">
+                <span class="window-dot dot-close"></span>
+                <span class="window-dot dot-min"></span>
+                <span class="window-dot dot-max"></span>
+              </div>
+              <div class="window-title">
+                <span class="live-dot" aria-hidden="true"></span>
+                <span>CCNA LAB — Live Interactive Drill</span>
+              </div>
+              <div class="window-action">
+                <span class="topic-pill">TOPIC 14.4.9</span>
+              </div>
+            </div>
+
+            <div class="window-body">
+              <div class="preview-question-meta">
+                <span class="meta-tag">QUESTION 1 / 172</span>
+                <span class="meta-status" id="previewStatus">Awaiting selection</span>
+              </div>
+
+              <h2 class="preview-question-text">
+                Refer to the exhibit. What will router R1 do with a packet that has a destination IPv6 address of 2001:db8:cafe:5::1?
+              </h2>
+
+              <!-- Exhibit Accordion / Inspection Toggle -->
+              <div class="preview-exhibit" id="previewExhibit">
+                <button type="button" class="exhibit-toggle-btn" id="exhibitToggle" aria-expanded="false" aria-controls="exhibitDetails">
+                  <span class="exhibit-toggle-label">
+                    <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    <span>Router R1 IPv6 Routing Table Exhibit</span>
+                  </span>
+                  <span class="exhibit-toggle-action">Inspect CLI <span class="chevron" aria-hidden="true">↓</span></span>
+                </button>
+                <div class="exhibit-content" id="exhibitDetails" hidden>
+                  <pre class="cli-output"><code>R1# show ipv6 route
+&lt;output omitted&gt;
+S  ::/0 [1/0]
+     via Serial0/0/0, directly connected
+C  2001:DB8:CAFE:1::/64 [0/0]
+     via GigabitEthernet0/1, directly connected
+L  2001:DB8:CAFE:1::1/128 [0/0]
+     via GigabitEthernet0/1, receive
+C  2001:DB8:CAFE:2::/64 [0/0]
+     via GigabitEthernet0/0, directly connected
+L  2001:DB8:CAFE:2::1/128 [0/0]
+     via GigabitEthernet0/0, receive
+C  2001:DB8:CAFE:3::/64 [0/0]
+     via Serial0/0/0, directly connected
+L  2001:DB8:CAFE:3::1/128 [0/0]
+     via Serial0/0/0, receive
+S  2001:DB8:CAFE:4::1/128 [1/0]
+     via Serial0/0/0, directly connected
+L  FF00::/8 [0/0]
+     via Null0, receive</code></pre>
+                </div>
+              </div>
+
+              <!-- Options -->
+              <div class="preview-options" role="radiogroup" aria-label="Answer options">
+                <button type="button" class="preview-opt" data-opt="A" role="radio" aria-checked="false">
+                  <span class="opt-badge">A</span>
+                  <span class="opt-copy">forward the packet out GigabitEthernet0/0</span>
+                </button>
+                <button type="button" class="preview-opt" data-opt="B" role="radio" aria-checked="false">
+                  <span class="opt-badge">B</span>
+                  <span class="opt-copy">drop the packet</span>
+                </button>
+                <button type="button" class="preview-opt" data-opt="C" role="radio" aria-checked="false">
+                  <span class="opt-badge">C</span>
+                  <span class="opt-copy">forward the packet out GigabitEthernet0/1</span>
+                </button>
+                <button type="button" class="preview-opt" data-opt="D" role="radio" aria-checked="false" data-correct="true">
+                  <span class="opt-badge">D</span>
+                  <span class="opt-copy">forward the packet out Serial0/0/0</span>
+                </button>
+              </div>
+
+              <!-- Live Feedback Drawer -->
+              <div class="preview-feedback" id="previewFeedback" hidden aria-live="polite"></div>
+
+              <!-- Preview Controls -->
+              <div class="preview-controls">
+                <button type="button" class="btn btn-sm btn-ghost" id="previewResetBtn" disabled>
+                  <span>Reset</span>
+                </button>
+                <div class="preview-controls-right">
+                  <button type="button" class="btn btn-sm btn-primary" id="previewCheckBtn" disabled>
+                    <span>Check route</span>
+                  </button>
+                  <a href="CCNA1/CCNA2/index.html" class="btn btn-sm btn-secondary" title="Open full drill module">
+                    <span>Full App →</span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Footer Keyboard Bar inside the preview window -->
+            <div class="window-footer">
+              <span class="hint-item"><kbd>1–4</kbd> Select</span>
+              <span class="hint-item"><kbd>Enter</kbd> Check</span>
+              <span class="hint-item"><kbd>→</kbd> Next</span>
+              <span class="hint-item"><kbd>←</kbd> Back</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== CHAPTER 1: WORKFLOW & METHODOLOGY ==================== -->
+    <section class="section-workflow" id="workflow">
+      <div class="section-container">
+        
+        <header class="section-header">
+          <div class="badge-kicker">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span>Engineered for Cognitive Retention</span>
+          </div>
+          <h2 class="section-title">How drills replace passive memorization.</h2>
+          <p class="section-subtitle">
+            Most cert prep turns into skimming text dumps. CCNA LAB forces you to analyze topologies, parse real CLI outputs, and commit forwarding decisions under test conditions.
+          </p>
+        </header>
+
+        <div class="workflow-sequence">
+          
+          <!-- Step 1 -->
+          <article class="workflow-card">
+            <div class="card-step-num">01</div>
+            <div class="card-body">
+              <h3 class="card-heading">Exhibit-First Routing Analysis</h3>
+              <p class="card-text">
+                Every problem centers on authentic Cisco IOS outputs: <code>show ip route</code>, OSPF neighbor states, EtherChannel summary tables, and VLAN trunks. You decode the packet header against live routing metrics before touching an answer.
+              </p>
+              <ul class="card-checklist">
+                <li>Longest prefix match verification</li>
+                <li>Metric comparison (administrative distance &amp; cost)</li>
+                <li>VLAN encapsulation and native mismatch diagnostics</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Step 2 -->
+          <article class="workflow-card">
+            <div class="card-step-num">02</div>
+            <div class="card-body">
+              <h3 class="card-heading">State-Preserving Session Memory</h3>
+              <p class="card-text">
+                Step backwards and forwards freely without losing your working state. Review incorrect answers alongside verified Cisco explanations, retaining selection history across your entire study block.
+              </p>
+              <ul class="card-checklist">
+                <li>Bi-directional navigation with keyboard acceleration</li>
+                <li>Zero state destruction on filter swaps or topic shifts</li>
+                <li>Immediate visual feedback without blocking modals</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- Step 3 -->
+          <article class="workflow-card">
+            <div class="card-step-num">03</div>
+            <div class="card-body">
+              <h3 class="card-heading">Granular Topic Scoping</h3>
+              <p class="card-text">
+                Filter directly by syllabus chapters or targeted ranges. Isolate DHCPv4/SLAAC troubleshooting or drill exclusively on OSPF point-to-point adjacency problems until every rule becomes reflex.
+              </p>
+              <ul class="card-checklist">
+                <li>Topics 1–4: Basic Device Config &amp; Switching</li>
+                <li>Topics 5–9: STP, EtherChannel &amp; FHRP</li>
+                <li>Topics 10–14: Routing Concepts &amp; Dynamic OSPF</li>
+                <li>Topics 15–16: Wireless LAN &amp; Endpoint Security</li>
+              </ul>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== CHAPTER 2: SYLLABUS DOMAINS ==================== -->
+    <section class="section-domains" id="domains">
+      <div class="section-container">
+        
+        <header class="section-header">
+          <div class="badge-kicker">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span>Comprehensive Question Bank</span>
+          </div>
+          <h2 class="section-title">16 syllabus chapters. Zero artificial padding.</h2>
+          <p class="section-subtitle">
+            Every drill maps to official Cisco CCNA 2 (Switching, Routing &amp; Wireless Essentials v7.0) objectives. Explore the question distribution below.
+          </p>
+        </header>
+
+        <!-- Interactive Domain Explorer -->
+        <div class="domains-layout">
+          
+          <div class="domain-selector" role="tablist" aria-label="Syllabus Modules">
+            <button type="button" class="domain-tab is-active" role="tab" aria-selected="true" data-domain="switching">
+              <div class="domain-tab-info">
+                <strong>Switching &amp; VLANs</strong>
+                <span>Topics 1–4 • 48 Questions</span>
+              </div>
+              <span class="domain-tab-arrow" aria-hidden="true">→</span>
+            </button>
+
+            <button type="button" class="domain-tab" role="tab" aria-selected="false" data-domain="redundancy">
+              <div class="domain-tab-info">
+                <strong>STP, EtherChannel &amp; FHRP</strong>
+                <span>Topics 5–9 • 38 Questions</span>
+              </div>
+              <span class="domain-tab-arrow" aria-hidden="true">→</span>
+            </button>
+
+            <button type="button" class="domain-tab" role="tab" aria-selected="false" data-domain="routing">
+              <div class="domain-tab-info">
+                <strong>IP Routing &amp; OSPF</strong>
+                <span>Topics 10–14 • 62 Questions</span>
+              </div>
+              <span class="domain-tab-arrow" aria-hidden="true">→</span>
+            </button>
+
+            <button type="button" class="domain-tab" role="tab" aria-selected="false" data-domain="wireless">
+              <div class="domain-tab-info">
+                <strong>WLAN &amp; Network Security</strong>
+                <span>Topics 15–16 • 24 Questions</span>
+              </div>
+              <span class="domain-tab-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+
+          <div class="domain-detail-card" id="domainDetailCard" role="tabpanel">
+            <div class="detail-header">
+              <span class="detail-kicker" id="detailKicker">CORE SWITCHING</span>
+              <h3 class="detail-title" id="detailTitle">VLANs, Trunking &amp; Inter-VLAN Routing</h3>
+            </div>
+            
+            <p class="detail-desc" id="detailDesc">
+              Master switchport access and 802.1Q trunking behavior, dynamic trunking protocol (DTP) states, native VLAN mismatch security vulnerabilities, and legacy router-on-a-stick vs. Layer 3 SVI routing architectures.
+            </p>
+
+            <div class="detail-spec-grid">
+              <div class="spec-cell">
+                <span class="spec-label">Key Exhibits</span>
+                <strong class="spec-value" id="detailExhibits">Switchport config, MAC tables, DTP negotiation</strong>
+              </div>
+              <div class="spec-cell">
+                <span class="spec-label">Critical Commands</span>
+                <strong class="spec-value" id="detailCommands">show interfaces trunk, show vlan brief</strong>
+              </div>
+              <div class="spec-cell">
+                <span class="spec-label">Common Traps</span>
+                <strong class="spec-value" id="detailTraps">Native VLAN frame tags, allowed VLAN lists</strong>
+              </div>
+              <div class="spec-cell">
+                <span class="spec-label">Question Count</span>
+                <strong class="spec-value" id="detailCount">48 Verified Records</strong>
+              </div>
+            </div>
+
+            <div class="detail-action">
+              <a href="CCNA1/CCNA2/index.html" class="btn btn-secondary" id="detailDrillLink">
+                <span>Start Topic 1–4 Drill</span>
+                <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== CHAPTER 3: ARCHITECTURE & MECHANICS ==================== -->
+    <section class="section-architecture" id="architecture">
+      <div class="section-container">
+        
+        <header class="section-header">
+          <div class="badge-kicker">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span>Performance &amp; Trust</span>
+          </div>
+          <h2 class="section-title">Engineered for distraction-free study.</h2>
+          <p class="section-subtitle">
+            No signup barriers, no analytics pixels tracking your clicks, and zero bloated frameworks. Pure client-side execution.
+          </p>
+        </header>
+
+        <div class="arch-grid">
+          
+          <div class="arch-card">
+            <div class="arch-icon-wrap">
+              <svg viewBox="0 0 24 24" class="arch-icon" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="arch-title">Sub-50KB Payload</h3>
+            <p class="arch-text">
+              Zero megabyte JavaScript bundles. Lightweight modern CSS and direct browser APIs ensure instant page loads on any device, even over mobile tethering.
+            </p>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-icon-wrap">
+              <svg viewBox="0 0 24 24" class="arch-icon" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="arch-title">Complete Privacy</h3>
+            <p class="arch-text">
+              No tracking cookies, no telemetry scripts, and no marketing tags. Your study sessions, answers, and progress remain strictly inside your browser.
+            </p>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-icon-wrap">
+              <svg viewBox="0 0 24 24" class="arch-icon" aria-hidden="true"><path d="m18 15-6-6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="3" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3 class="arch-title">100% Keyboard Accessible</h3>
+            <p class="arch-text">
+              Keep your fingers on the keyboard. Use <kbd>1–4</kbd> to toggle options, <kbd>Enter</kbd> to check routes, and <kbd>→</kbd> / <kbd>←</kbd> to step between questions seamlessly.
+            </p>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-icon-wrap">
+              <svg viewBox="0 0 24 24" class="arch-icon" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="arch-title">Inspectable Question DB</h3>
+            <p class="arch-text">
+              Need to search for a specific subnetting scenario? Jump into the full searchable archive to filter questions, answers, and exhibits without running a quiz.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== ACTION / FINALE ==================== -->
+    <section class="section-finale">
+      <div class="section-container">
+        
+        <div class="finale-box">
+          <div class="finale-content">
+            <span class="badge-kicker">
+              <span class="badge-dot" aria-hidden="true"></span>
+              <span>Ready for Session</span>
+            </span>
+
+            <h2 class="finale-title">Master packet forwarding before exam day.</h2>
+            <p class="finale-subtext">
+              Start drilling immediately. No registration, no downloads, and instant verification across all 16 CCNA 2 topics.
+            </p>
+
+            <div class="finale-actions">
+              <a href="CCNA1/CCNA2/index.html" class="btn btn-lg btn-primary">
+                <span>Start CCNA 2 Drills (172 Questions)</span>
+                <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a href="CCNA1/CCNA2/questions.html" class="btn btn-lg btn-secondary">
+                <span>Open Question Archive</span>
+              </a>
+              <a href="CCNA1/index.html" class="btn btn-lg btn-ghost">
+                <span>CCNA 1 Basics</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Clean, Non-bloated Footer -->
+  <footer class="site-footer">
+    <div class="footer-shell">
+      <div class="footer-brand-col">
+        <span class="brand-title">CCNA LAB</span>
+        <p class="footer-tagline">
+          Independent Cisco CCNA exam preparation workbench. Switching, Routing &amp; Wireless practice.
+        </p>
+      </div>
+
+      <div class="footer-nav-col">
+        <strong class="footer-col-heading">Drill Modules</strong>
+        <a href="CCNA1/CCNA2/index.html">CCNA 2 Interactive Quiz</a>
+        <a href="CCNA1/CCNA2/questions.html">CCNA 2 Question Database</a>
+        <a href="CCNA1/index.html">CCNA 1 Fundamentals</a>
+      </div>
+
+      <div class="footer-nav-col">
+        <strong class="footer-col-heading">Certification</strong>
+        <span class="footer-meta">Cisco 200-301 CCNA</span>
+        <span class="footer-meta">SRWE Version 7.00</span>
+        <span class="footer-meta">172 Verified Records</span>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-shell footer-bottom-shell">
+        <p class="copyright-text">
+          &copy; 2026 CCNA LAB. Built for high-efficiency certification practice. Not affiliated with or endorsed by Cisco Systems, Inc.
+        </p>
+        <div class="footer-shortcuts" aria-label="Global Shortcuts">
+          <span><kbd>1-4</kbd> Choose</span>
+          <span><kbd>Enter</kbd> Check</span>
+          <span><kbd>→</kbd> Next</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

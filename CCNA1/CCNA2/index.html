@@ -33,6 +33,8 @@
     <div class="nav-links">
       <a href="index.html" class="active" aria-current="page">Quiz</a>
       <a href="questions.html">Questions</a>
+      <a href="unanswered.html">No Answer <span class="nav-badge nav-unanswered-badge">(8)</span></a>
+      <a href="review.html">Review</a>
       <a href="../index.html">CCNA1</a>
     </div>
   </div>
@@ -42,8 +44,33 @@
   <section id="quizView" class="quiz-view" aria-live="polite">
     <div class="quiz-card" id="quizCard">
       <div class="card-topbar">
-        <span class="meta-pill meta-pill-primary" id="questionBadge">QUESTION</span>
-        <span class="meta-pill" id="topicBadge" hidden></span>
+        <div class="topbar-meta-group">
+          <span class="meta-pill meta-pill-primary" id="questionBadge">QUESTION</span>
+          <span class="meta-pill" id="topicBadge" hidden></span>
+          <button type="button" class="tool-btn flag-btn" id="flagBtn" title="Flag question for review (F)" aria-label="Flag question for review">
+            <svg viewBox="0 0 24 24" class="icon"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="flag-label">Flag</span>
+          </button>
+        </div>
+
+        <div class="topbar-tools-group">
+          <div class="exam-timer-pill" id="examTimer" hidden>
+            <svg viewBox="0 0 24 24" class="icon"><path d="M12 6v6l4 2M12 22a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span id="examTimerText">60:00</span>
+          </div>
+          <button type="button" class="tool-btn" id="shuffleQuestionsBtn" title="Shuffle questions order">
+            <svg viewBox="0 0 24 24" class="icon"><path d="M16 3h5v5M4 20l17-17M21 16v5h-5M15 15l6 6M4 4l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Shuffle Qs</span>
+          </button>
+          <button type="button" class="tool-btn" id="shuffleOptionsBtn" title="Shuffle answer choices (A-D)">
+            <svg viewBox="0 0 24 24" class="icon"><path d="m16 16 3-8 3 8M4 7h6M7 4v14M2 18h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Shuffle A–D</span>
+          </button>
+          <button type="button" class="tool-btn tool-btn-exam" id="examModeBtn" title="Start 60-min, 50-question mock exam">
+            <svg viewBox="0 0 24 24" class="icon"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Mock Exam</span>
+          </button>
+        </div>
       </div>
 
       <div class="question-stage" id="questionStage">
@@ -52,7 +79,7 @@
         <div id="imageContainer" class="exhibit" hidden>
           <div class="exhibit-header">
             <span>EXHIBIT</span>
-            <span>Click to inspect</span>
+            <span>Click to inspect (or press Z)</span>
           </div>
           <button type="button" id="exhibitTrigger" class="exhibit-trigger" aria-label="Open exhibit in fullscreen">
             <img id="questionImage" alt="Question exhibit">
@@ -76,6 +103,24 @@
 
       <div id="feedback" class="feedback" aria-live="assertive"></div>
 
+      <!-- Personal Study Note Box -->
+      <div class="note-box" id="noteBox">
+        <button type="button" class="note-toggle-btn" id="noteToggleBtn">
+          <span style="display:inline-flex; align-items:center; gap:7px;">
+            <svg viewBox="0 0 24 24" class="icon" style="width:15px; height:15px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="noteToggleText">Add personal note / cheat-sheet</span>
+          </span>
+          <svg viewBox="0 0 24 24" class="icon" id="noteChevron" style="width:14px; height:14px;"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="note-content-panel" id="noteContentPanel" hidden>
+          <textarea id="noteInput" rows="2" placeholder="Write personal CLI commands, key mnemonics, or notes for this question..."></textarea>
+          <div class="note-actions">
+            <button type="button" class="note-save-btn" id="noteSaveBtn">Save Note</button>
+            <button type="button" class="note-clear-btn" id="noteClearBtn">Clear</button>
+          </div>
+        </div>
+      </div>
+
       <div class="controls">
         <button id="prev" class="action-btn action-btn-secondary action-btn-prev" type="button" disabled>
           <svg viewBox="0 0 24 24" class="icon"><path d="M19 12H6m5-5-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -84,6 +129,10 @@
         <button id="check" class="action-btn action-btn-primary action-btn-check" type="button" disabled>
           <span>Check answer</span>
           <svg viewBox="0 0 24 24" class="icon"><path d="m7 12.5 3.2 3.2L17.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button id="finishExam" class="action-btn action-btn-primary" type="button" style="display:none;">
+          <span>Finish Exam</span>
+          <svg viewBox="0 0 24 24" class="icon"><path d="m5 13 4 4L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <button id="next" class="action-btn action-btn-secondary action-btn-next" type="button" disabled>
           <span>Next<span class="label-extra"> question</span></span>
@@ -96,6 +145,8 @@
         <span><kbd>Enter</kbd> Check</span>
         <span><kbd>←</kbd><kbd>P</kbd> Previous</span>
         <span><kbd>→</kbd> Next</span>
+        <span><kbd>F</kbd> Flag</span>
+        <span><kbd>Z</kbd> Zoom Exhibit</span>
       </div>
     </div>
   </section>
@@ -110,9 +161,37 @@
   </div>
 </div>
 
+<!-- Mock Exam Results Modal -->
+<div id="examResultModal" class="exam-modal-overlay hidden" aria-hidden="true">
+  <div class="exam-modal-box">
+    <header class="database-hero" style="margin-bottom:12px;">
+      <div>
+        <span class="page-kicker">Simulation Complete</span>
+        <h2 class="page-title" style="font-size:1.6rem; margin:6px 0 0;" id="examResultTitle">Mock Exam Results</h2>
+      </div>
+    </header>
+    <div class="exam-score-banner is-pass" id="examScoreBanner">
+      <div class="exam-score-large" id="examScoreLarge">42 / 50</div>
+      <div class="exam-badge-pass" id="examPassBadge">PASS</div>
+    </div>
+    <div class="exam-stats-row">
+      <div><span>Accuracy</span> <strong id="examAccuracyPct">84%</strong></div>
+      <div><span>Passing Mark</span> <strong>82.5%</strong></div>
+      <div><span>Missed</span> <strong id="examMissedCount">8 questions</strong></div>
+    </div>
+    <div style="font-size:0.75rem; font-weight:800; color:var(--text-faint); margin-bottom:8px; letter-spacing:0.08em; text-transform:uppercase;">Topic Performance Breakdown</div>
+    <div class="exam-topic-breakdown" id="examTopicBreakdown"></div>
+    <div class="exam-modal-actions">
+      <button type="button" class="toolbar-action-btn" id="examReviewMistakesBtn">Practice Missed Questions</button>
+      <button type="button" class="toolbar-action-btn btn-danger" id="examCloseBtn">Exit Exam Mode</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="ui.js"></script>
+<script src="storage.js"></script>
 <script src="scriptindex.js"></script>
 </body>
 </html>
