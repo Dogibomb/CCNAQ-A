@@ -1,12 +1,11 @@
 /**
- * CCNA 2 LAB — Storage & Progress Management
- * Persists user drill progress, mistake tracking, bookmark flags,
- * personal study notes, and custom unanswered overrides in localStorage.
- *
- * Dedicated storage key: `ccna2_progress`
+ * CCNA 2 — Storage & Progress Management
+ * Persists drill progress, mistake tracking, bookmark flags, and study notes
+ * in localStorage under `ccna2_progress`, with in-memory caching.
  */
 
 const PROGRESS_STORAGE_KEY = "ccna2_progress";
+let cachedProgress = null;
 
 function getDefaultProgress() {
   return {
@@ -14,34 +13,52 @@ function getDefaultProgress() {
     completedQuestions: {},  // qNumber -> { questionId, status: "correct" | "wrong", lastSelected: [], timestamp }
     flaggedQuestions: [],    // [ qNumber, ... ]
     notes: {},               // qNumber -> "note text"
-    customOverrides: {}      // qNumber -> { correct_answer: [], customText: "" }
+    customOverrides: {}      // retained gracefully if present in existing storage
+  };
+}
+
+function normalizeProgress(data) {
+  return {
+    wrongQuestions: (data && typeof data.wrongQuestions === "object" && data.wrongQuestions) || {},
+    completedQuestions: (data && typeof data.completedQuestions === "object" && data.completedQuestions) || {},
+    flaggedQuestions: Array.isArray(data?.flaggedQuestions) ? data.flaggedQuestions.map(Number) : [],
+    notes: (data && typeof data.notes === "object" && data.notes) || {},
+    customOverrides: (data && typeof data.customOverrides === "object" && data.customOverrides) || {}
   };
 }
 
 function loadProgress() {
+  if (cachedProgress) return cachedProgress;
   try {
     const raw = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
-    if (!raw) return getDefaultProgress();
-    const data = JSON.parse(raw);
-    return {
-      wrongQuestions: (data && typeof data.wrongQuestions === "object") ? data.wrongQuestions : {},
-      completedQuestions: (data && typeof data.completedQuestions === "object") ? data.completedQuestions : {},
-      flaggedQuestions: Array.isArray(data?.flaggedQuestions) ? data.flaggedQuestions.map(Number) : [],
-      notes: (data && typeof data.notes === "object") ? data.notes : {},
-      customOverrides: (data && typeof data.customOverrides === "object") ? data.customOverrides : {}
-    };
+    cachedProgress = raw ? normalizeProgress(JSON.parse(raw)) : getDefaultProgress();
+    return cachedProgress;
   } catch (err) {
     console.warn("Could not read ccna2_progress from localStorage:", err);
-    return getDefaultProgress();
+    cachedProgress = getDefaultProgress();
+    return cachedProgress;
   }
 }
 
 function saveProgress(progress) {
+  cachedProgress = normalizeProgress(progress);
   try {
-    window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(cachedProgress));
   } catch (err) {
     console.warn("Could not write ccna2_progress to localStorage:", err);
   }
+}
+
+function invalidateCache() {
+  cachedProgress = null;
+}
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === PROGRESS_STORAGE_KEY || event.key === null) {
+      cachedProgress = null;
+    }
+  });
 }
 
 function getQuestionNumber(question, fallbackIndex) {
@@ -62,12 +79,21 @@ function parseTopic(question) {
   return null;
 }
 
-function isQuestionUnansweredInDataset(question) {
-  const a = question?.correct_answer;
-  if (a === undefined || a === null) return true;
-  if (typeof a === "string" && a.trim() === "") return true;
-  if (Array.isArray(a) && a.length === 0) return true;
-  return false;
+function isMatchingQuestion(question) {
+  return question?.type === "matching" && Boolean(question?.matching);
+}
+
+function formatExplanation(explanation = "") {
+  return String(explanation || "").replace(/^Topic\s*\d+(?:\.\d+)*\s*/i, "").trim();
+}
+
+function escapeHtml(str = "") {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function getEffectiveCorrectAnswers(question, overrides) {
@@ -80,20 +106,16 @@ function getEffectiveCorrectAnswers(question, overrides) {
   return question.correct_answer ? [question.correct_answer] : [];
 }
 
-/**
- * Record an answered question into completedQuestions and wrongQuestions
- */
-function recordAnswerResult({ qNumber, questionId, selected, correctList, isCorrect }) {
-  const progress = loadProgress();
+function applyAnswerToProgress(progress, { qNumber, questionId, selected, isCorrect }) {
   const key = String(qNumber);
   const selectedArr = Array.from(selected || []);
+  const now = Date.now();
 
-  // Update completed list
   progress.completedQuestions[key] = {
     questionId: questionId !== undefined ? questionId : qNumber,
     status: isCorrect ? "correct" : "wrong",
     lastSelected: selectedArr,
-    timestamp: Date.now()
+    timestamp: now
   };
 
   if (!isCorrect) {
@@ -102,16 +124,24 @@ function recordAnswerResult({ qNumber, questionId, selected, correctList, isCorr
     progress.wrongQuestions[key] = {
       questionId: questionId !== undefined ? questionId : qNumber,
       wrongAnswers: selectedArr,
-      timestamp: Date.now(),
+      timestamp: now,
       missCount: prevCount + 1
     };
-  } else {
-    // If answered correctly during practice, auto-remove from mistakes list
-    if (progress.wrongQuestions[key]) {
-      delete progress.wrongQuestions[key];
-    }
+  } else if (progress.wrongQuestions[key]) {
+    delete progress.wrongQuestions[key];
   }
+}
 
+function recordAnswerResult(result) {
+  const progress = loadProgress();
+  applyAnswerToProgress(progress, result);
+  saveProgress(progress);
+  return progress;
+}
+
+function recordBatchResults(results) {
+  const progress = loadProgress();
+  results.forEach((result) => applyAnswerToProgress(progress, result));
   saveProgress(progress);
   return progress;
 }
@@ -133,7 +163,6 @@ function toggleQuestionFlag(qNumber) {
   let isNowFlagged = false;
   if (index > -1) {
     progress.flaggedQuestions.splice(index, 1);
-    isNowFlagged = false;
   } else {
     progress.flaggedQuestions.push(num);
     isNowFlagged = true;
@@ -143,13 +172,11 @@ function toggleQuestionFlag(qNumber) {
 }
 
 function isQuestionFlagged(qNumber) {
-  const progress = loadProgress();
-  return progress.flaggedQuestions.includes(Number(qNumber));
+  return loadProgress().flaggedQuestions.includes(Number(qNumber));
 }
 
 function getQuestionNote(qNumber) {
-  const progress = loadProgress();
-  return progress.notes[String(qNumber)] || "";
+  return loadProgress().notes[String(qNumber)] || "";
 }
 
 function saveQuestionNote(qNumber, noteText) {
@@ -165,28 +192,6 @@ function saveQuestionNote(qNumber, noteText) {
   return progress;
 }
 
-function saveQuestionOverride(qNumber, overrideData) {
-  const progress = loadProgress();
-  const key = String(qNumber);
-  progress.customOverrides[key] = {
-    correct_answer: Array.isArray(overrideData.correct_answer) ? overrideData.correct_answer : (overrideData.correct_answer ? [overrideData.correct_answer] : []),
-    customText: overrideData.customText || "",
-    updatedAt: Date.now()
-  };
-  saveProgress(progress);
-  return progress;
-}
-
-function removeQuestionOverride(qNumber) {
-  const progress = loadProgress();
-  const key = String(qNumber);
-  if (progress.customOverrides[key]) {
-    delete progress.customOverrides[key];
-    saveProgress(progress);
-  }
-  return progress;
-}
-
 function resetProgressHistory() {
   const progress = loadProgress();
   progress.wrongQuestions = {};
@@ -195,60 +200,27 @@ function resetProgressHistory() {
   return progress;
 }
 
-/**
- * Generates full JSON string with custom overrides merged in
- */
-function exportUpdatedJson(allQuestions) {
-  const progress = loadProgress();
-  const overrides = progress.customOverrides;
-  const merged = allQuestions.map((q, idx) => {
-    const qNum = String(getQuestionNumber(q, idx));
-    if (overrides[qNum] && overrides[qNum].correct_answer.length > 0) {
-      return {
-        ...q,
-        correct_answer: overrides[qNum].correct_answer
-      };
-    }
-    return q;
-  });
-  return JSON.stringify(merged, null, 4);
-}
-
-/**
- * Updates navbar badges across pages
- */
-function syncNavbarBadges(allQuestions) {
-  const unansweredCount = Array.isArray(allQuestions)
-    ? allQuestions.filter(isQuestionUnansweredInDataset).length
-    : 8;
-
-  const badges = document.querySelectorAll(".nav-unanswered-badge, [data-unanswered-badge]");
-  badges.forEach((el) => {
-    el.textContent = `(${unansweredCount})`;
-  });
-}
-
 const CCNAStorage = {
   PROGRESS_STORAGE_KEY,
   getDefaultProgress,
   loadProgress,
   saveProgress,
+  invalidateCache,
   getQuestionNumber,
   cleanQuestionText,
   parseTopic,
-  isQuestionUnansweredInDataset,
+  isMatchingQuestion,
+  formatExplanation,
+  escapeHtml,
   getEffectiveCorrectAnswers,
   recordAnswerResult,
+  recordBatchResults,
   markMistakeMastered,
   toggleQuestionFlag,
   isQuestionFlagged,
   getQuestionNote,
   saveQuestionNote,
-  saveQuestionOverride,
-  removeQuestionOverride,
-  resetProgressHistory,
-  exportUpdatedJson,
-  syncNavbarBadges
+  resetProgressHistory
 };
 
 if (typeof window !== "undefined") {

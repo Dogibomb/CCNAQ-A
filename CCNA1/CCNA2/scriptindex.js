@@ -1,11 +1,13 @@
 const FILTER_STORAGE_KEY = "ccna2.topicFilter";
 const RANGE_PRESETS = [
   [1, 4],
-  [5, 9],
-  [10, 14]
+  [5, 6],
+  [7, 9],
+  [10, 13],
+  [14, 16]
 ];
-const LEAVE_MS = 210;
-const ENTER_MS = 430;
+const LEAVE_MS = 90;
+const ENTER_MS = 140;
 
 let questions = [];          // full question bank (index = stable question id)
 let filtered = [];           // ids of questions in the active filter
@@ -16,6 +18,7 @@ let activeFilter = "all";
 let transitioning = false;
 let transitionTimers = [];
 let toastTimer = null;
+let viewerOpenedByTrigger = false;
 
 // Study & Exam Feature States
 let isShuffleQuestions = false;
@@ -25,8 +28,8 @@ let examTimeRemaining = 3600; // 60 minutes in seconds
 let examTimerInterval = null;
 let examSavedFilter = "all";
 
-// Per-question answer history for the current filter session.
-// id -> { selected: Set<string>, checked: boolean, correct: boolean, displayOptions?: string[] }
+// Per-question session state:
+// id -> { selected: Set<string>, checked: boolean, correct: boolean, displayOptions?: string[], matches?: Map<number, string[]>, activeSource?: string|null, displaySources?: string[] }
 const session = new Map();
 
 const els = {
@@ -34,8 +37,10 @@ const els = {
   question: document.getElementById("question"),
   questionBadge: document.getElementById("questionBadge"),
   topicBadge: document.getElementById("topicBadge"),
+  multiHintBadge: document.getElementById("multiHintBadge"),
   topicFilter: document.getElementById("topicFilter"),
   answers: document.getElementById("answers"),
+  matchingContainer: document.getElementById("matchingContainer"),
   empty: document.getElementById("answerEmptyState"),
   prev: document.getElementById("prev"),
   check: document.getElementById("check"),
@@ -46,6 +51,7 @@ const els = {
   exhibitTrigger: document.getElementById("exhibitTrigger"),
   exhibitError: document.getElementById("exhibitError"),
   feedback: document.getElementById("feedback"),
+  hintSelectKeys: document.getElementById("hintSelectKeys"),
   overlay: document.getElementById("quizImageOverlay"),
   overlayImage: document.getElementById("quizOverlayImage"),
   overlayClose: document.getElementById("quizImageClose"),
@@ -89,24 +95,23 @@ fetch("ccna.json")
   .then((data) => {
     if (!Array.isArray(data) || data.length === 0) throw new Error("Question bank is empty.");
     questions = data.map((question, id) => ({ ...question, _topic: parseTopic(question), _id: id }));
-    if (window.CCNAStorage) window.CCNAStorage.syncNavbarBadges(data);
 
     buildTopicFilter();
 
-    // Check URL parameters (e.g. index.html?filter=mistakes or index.html?q=10)
     const urlParams = new URLSearchParams(window.location.search);
     const filterParam = urlParams.get("filter");
     const qParam = urlParams.get("q");
 
-    let initialFilter = readStoredFilter();
-    if (filterParam && isKnownFilter(filterParam)) {
-      initialFilter = filterParam;
-    }
+    const initialFilter = (filterParam && isKnownFilter(filterParam)) ? filterParam : readStoredFilter();
     applyFilter(initialFilter, { animate: false });
 
     if (qParam) {
       const targetNum = Number(qParam);
-      const targetIdx = filtered.findIndex((id) => getQuestionNumber(questions[id]) === targetNum);
+      let targetIdx = filtered.findIndex((id) => getQuestionNumber(questions[id], id) === targetNum);
+      if (targetIdx === -1 && !filterParam) {
+        applyFilter("all", { animate: false });
+        targetIdx = filtered.findIndex((id) => getQuestionNumber(questions[id], id) === targetNum);
+      }
       if (targetIdx !== -1) {
         position = targetIdx;
         renderCurrent();
@@ -118,35 +123,27 @@ fetch("ccna.json")
     showLoadError();
   });
 
-/* ---------- Data helpers ---------- */
+/* ---------- Data helpers (delegating to CCNAStorage) ---------- */
 
 function cleanQuestionText(text = "") {
-  return String(text).replace(/^\s*\d+\.\s*/, "").trim();
+  return window.CCNAStorage.cleanQuestionText(text);
 }
 
 function getQuestionNumber(question, fallbackIndex) {
-  const match = String(question?.question || "").match(/^\s*(\d+)\./);
-  return match ? Number(match[1]) : (fallbackIndex !== undefined ? fallbackIndex + 1 : 1);
+  return window.CCNAStorage.getQuestionNumber(question, fallbackIndex);
 }
 
 function parseTopic(question) {
-  const sources = [question?.explanation, question?.question];
-  for (const source of sources) {
-    const match = String(source || "").match(/Topic\s*(\d+(?:\.\d+)*)/i);
-    if (match) return { label: match[1], chapter: Number(match[1].split(".")[0]) };
-  }
-  return null;
+  return window.CCNAStorage.parseTopic(question);
+}
+
+function isMatching(question) {
+  return window.CCNAStorage.isMatchingQuestion(question);
 }
 
 function getCorrectList(question) {
-  if (window.CCNAStorage) {
-    const progress = window.CCNAStorage.loadProgress();
-    const effective = window.CCNAStorage.getEffectiveCorrectAnswers(question, progress.customOverrides);
-    if (effective.length) return effective;
-  }
-  if (!question) return [];
-  if (Array.isArray(question.correct_answer)) return question.correct_answer;
-  return question.correct_answer ? [question.correct_answer] : [];
+  const progress = window.CCNAStorage.loadProgress();
+  return window.CCNAStorage.getEffectiveCorrectAnswers(question, progress.customOverrides);
 }
 
 function getOptions(question) {
@@ -158,15 +155,22 @@ function getEntry(id) {
   return session.get(id);
 }
 
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 /* ---------- Topic filter & Quick Modes ---------- */
 
 function countWhere(predicate) {
   return questions.filter(predicate).length;
 }
 
-function matchesFilter(question, filter) {
-  const qNum = getQuestionNumber(question);
-  const progress = window.CCNAStorage ? window.CCNAStorage.loadProgress() : { completedQuestions: {}, wrongQuestions: {}, flaggedQuestions: [] };
+function matchesFilter(question, filter, progress) {
+  const qNum = getQuestionNumber(question, question._id);
 
   if (filter === "all") return true;
   if (filter === "unseen") return !progress.completedQuestions[String(qNum)];
@@ -188,7 +192,7 @@ function matchesFilter(question, filter) {
 
 function buildTopicFilter() {
   const select = els.topicFilter;
-  const progress = window.CCNAStorage ? window.CCNAStorage.loadProgress() : { completedQuestions: {}, wrongQuestions: {}, flaggedQuestions: [] };
+  const progress = window.CCNAStorage.loadProgress();
 
   const chapters = [...new Set(questions.map((q) => q._topic?.chapter).filter(Number.isFinite))].sort((a, b) => a - b);
   const maxChapter = chapters.length ? chapters[chapters.length - 1] : 0;
@@ -200,14 +204,13 @@ function buildTopicFilter() {
   const makeOption = (value, label, customCount) => {
     const option = document.createElement("option");
     option.value = value;
-    const count = customCount !== undefined ? customCount : countWhere((q) => matchesFilter(q, value));
+    const count = customCount !== undefined ? customCount : countWhere((q) => matchesFilter(q, value, progress));
     option.textContent = `${label} (${count})`;
     return option;
   };
 
   select.innerHTML = "";
 
-  // 1. Quick Study Modes Group
   const quickGroup = document.createElement("optgroup");
   quickGroup.label = "Study & Progress Modes";
   quickGroup.appendChild(makeOption("all", "All questions", questions.length));
@@ -216,7 +219,6 @@ function buildTopicFilter() {
   quickGroup.appendChild(makeOption("flagged", "Flagged only"));
   select.appendChild(quickGroup);
 
-  // 2. Topic Ranges Group
   const rangeGroup = document.createElement("optgroup");
   rangeGroup.label = "Topic ranges";
   ranges.forEach(([from, to]) => {
@@ -225,7 +227,6 @@ function buildTopicFilter() {
   });
   select.appendChild(rangeGroup);
 
-  // 3. Single Topic Group
   const topicGroup = document.createElement("optgroup");
   topicGroup.label = "Single topic";
   chapters.forEach((chapter) => topicGroup.appendChild(makeOption(`topic:${chapter}`, `Topic ${chapter}`)));
@@ -233,7 +234,10 @@ function buildTopicFilter() {
 
   if (questions.some((q) => !q._topic)) select.appendChild(makeOption("none", "Unassigned"));
 
-  select.disabled = false;
+  if (isKnownFilter(activeFilter)) {
+    select.value = activeFilter;
+  }
+  select.disabled = isExamMode;
 }
 
 function isKnownFilter(value) {
@@ -264,7 +268,8 @@ function applyFilter(value, { animate = true } = {}) {
 
   cancelTransition();
   session.clear();
-  filtered = questions.filter((q) => matchesFilter(q, activeFilter)).map((q) => q._id);
+  const progress = window.CCNAStorage.loadProgress();
+  filtered = questions.filter((q) => matchesFilter(q, activeFilter, progress)).map((q) => q._id);
   filteredUnshuffled = [...filtered];
 
   if (isShuffleQuestions) {
@@ -340,6 +345,31 @@ function currentQuestion() {
   return displayedId === null ? null : questions[displayedId];
 }
 
+function updateSelectionHintBadge(current, entry) {
+  if (!els.multiHintBadge) return;
+
+  if (!current) {
+    els.multiHintBadge.hidden = true;
+    return;
+  }
+
+  if (isMatching(current)) {
+    const expectedTotal = getExpectedMatchCount(current);
+    const placedCount = getPlacedMatchCount(current, entry);
+    els.multiHintBadge.textContent = `MATCH ${placedCount}/${expectedTotal}`;
+    els.multiHintBadge.hidden = false;
+    return;
+  }
+
+  const requiredCount = getCorrectList(current).length;
+  if (requiredCount > 1) {
+    els.multiHintBadge.textContent = `CHOOSE ${requiredCount} (${entry.selected.size}/${requiredCount})`;
+    els.multiHintBadge.hidden = false;
+  } else {
+    els.multiHintBadge.hidden = true;
+  }
+}
+
 function renderCurrent() {
   if (!filtered.length) {
     renderEmptyFilter();
@@ -352,7 +382,6 @@ function renderCurrent() {
   const current = questions[displayedId];
   const entry = getEntry(displayedId);
   const number = getQuestionNumber(current, displayedId);
-  const options = getOptions(current);
 
   els.question.textContent = cleanQuestionText(current.question);
   els.questionBadge.textContent = isExamMode
@@ -367,22 +396,42 @@ function renderCurrent() {
     els.topicBadge.hidden = true;
   }
 
-  // Render Flag State
   if (els.flagBtn) {
-    const isFlagged = window.CCNAStorage ? window.CCNAStorage.isQuestionFlagged(number) : false;
+    const isFlagged = window.CCNAStorage.isQuestionFlagged(number);
     els.flagBtn.classList.toggle("is-flagged", isFlagged);
     const flagLabel = els.flagBtn.querySelector(".flag-label");
     if (flagLabel) flagLabel.textContent = isFlagged ? "Flagged" : "Flag";
   }
 
-  // Render Personal Note State
   renderQuestionNote(number);
-
   renderImage(current, number);
-  renderAnswers(options, entry);
+
+  if (isMatching(current)) {
+    els.answers.innerHTML = "";
+    els.answers.hidden = true;
+    els.empty.hidden = true;
+    els.matchingContainer.hidden = false;
+    renderMatchingBoard(current, entry);
+    if (els.hintSelectKeys) {
+      const n = current.matching.sources.length;
+      els.hintSelectKeys.textContent = n > 1 ? `1–${Math.min(n, 9)}` : "1";
+    }
+  } else {
+    els.matchingContainer.innerHTML = "";
+    els.matchingContainer.hidden = true;
+    els.answers.hidden = false;
+    const options = getOptions(current);
+    renderAnswers(options, entry);
+    if (els.hintSelectKeys) {
+      const n = options.length;
+      els.hintSelectKeys.textContent = n > 1 ? `1–${Math.min(n, 9)}` : "1";
+    }
+  }
+
+  updateSelectionHintBadge(current, entry);
 
   if (!isExamMode && entry.checked) {
-    showFeedback(entry.correct);
+    showFeedback(entry.correct, current);
   } else {
     resetFeedback();
   }
@@ -395,6 +444,7 @@ function renderEmptyFilter() {
   els.questionBadge.textContent = "QUESTION 0 / 0";
   els.questionBadge.removeAttribute("title");
   els.topicBadge.hidden = true;
+  if (els.multiHintBadge) els.multiHintBadge.hidden = true;
   if (els.flagBtn) els.flagBtn.classList.remove("is-flagged");
   els.question.textContent = activeFilter === "mistakes"
     ? "No mistakes recorded to review. Great job!"
@@ -406,7 +456,11 @@ function renderEmptyFilter() {
   els.imageContainer.hidden = true;
   els.image.removeAttribute("src");
   els.answers.innerHTML = "";
+  els.answers.hidden = false;
+  els.matchingContainer.innerHTML = "";
+  els.matchingContainer.hidden = true;
   els.empty.hidden = true;
+  if (els.noteBox) els.noteBox.hidden = true;
   resetFeedback();
   updateControls();
 }
@@ -414,7 +468,10 @@ function renderEmptyFilter() {
 function updateControls() {
   const current = currentQuestion();
   const entry = displayedId === null ? null : getEntry(displayedId);
-  const hasChoices = current && getOptions(current).length > 0 && getCorrectList(current).length > 0;
+  const hasChoices = current && (
+    isMatching(current) ||
+    (getOptions(current).length > 0 && getCorrectList(current).length > 0)
+  );
 
   els.prev.disabled = filtered.length === 0 || position <= 0;
   els.next.disabled = filtered.length === 0 || position >= filtered.length - 1;
@@ -461,23 +518,13 @@ function renderImage(current, questionNumber) {
   els.image.src = src;
 }
 
-/* ---------- Answers & Option Shuffling ---------- */
-
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+/* ---------- Multiple-Choice Answers ---------- */
 
 function renderAnswers(options, entry) {
   const correctList = getCorrectList(currentQuestion());
   els.answers.innerHTML = "";
-  els.answers.classList.toggle("is-restored", entry.checked);
   els.empty.hidden = options.length > 0;
 
-  // Determine display order of options
   let displayOptions = options;
   if (isShuffleOptions) {
     if (!entry.displayOptions) {
@@ -486,7 +533,6 @@ function renderAnswers(options, entry) {
     displayOptions = entry.displayOptions;
   } else {
     entry.displayOptions = options;
-    displayOptions = options;
   }
 
   displayOptions.forEach((optText, index) => {
@@ -495,7 +541,6 @@ function renderAnswers(options, entry) {
     button.className = "answer-option";
     button.dataset.answer = optText;
     button.dataset.index = String(index);
-    button.style.setProperty("--option-delay", `${90 + index * 60}ms`);
 
     const letter = String.fromCharCode(65 + index);
     button.innerHTML = `
@@ -539,11 +584,373 @@ function applyResultState(button, correctList, selected) {
   button.disabled = true;
 }
 
+/* ---------- Interactive Matching Engine ---------- */
+
+function getExpectedMatchCount(question) {
+  if (!isMatching(question)) return 0;
+  return question.matching.targets.reduce((sum, t) => sum + (Array.isArray(t.expected) ? t.expected.length : 0), 0);
+}
+
+function ensureMatchingEntry(question, entry) {
+  if (!(entry.matches instanceof Map)) entry.matches = new Map();
+  if (entry.activeSource === undefined) entry.activeSource = null;
+
+  const sources = question.matching.sources || [];
+  if (isShuffleOptions) {
+    if (!entry.displaySources) entry.displaySources = shuffleArray([...sources]);
+  } else {
+    entry.displaySources = [...sources];
+  }
+}
+
+function getPlacedSet(entry) {
+  const placed = new Set();
+  if (entry.matches instanceof Map) {
+    entry.matches.forEach((arr) => arr.forEach((item) => placed.add(item)));
+  }
+  return placed;
+}
+
+function getPlacedMatchCount(question, entry) {
+  ensureMatchingEntry(question, entry);
+  let count = 0;
+  entry.matches.forEach((arr) => { count += arr.length; });
+  return count;
+}
+
+function removeSourceFromAllTargets(entry, sourceStr) {
+  if (!(entry.matches instanceof Map)) return;
+  entry.matches.forEach((arr, tIdx) => {
+    if (arr.includes(sourceStr)) {
+      const next = arr.filter((s) => s !== sourceStr);
+      if (next.length) entry.matches.set(tIdx, next);
+      else entry.matches.delete(tIdx);
+    }
+  });
+}
+
+function assignSourceToTarget(question, entry, sourceStr, targetIdx) {
+  if (!isExamMode && entry.checked) return;
+  ensureMatchingEntry(question, entry);
+
+  const target = question.matching.targets[targetIdx];
+  if (!target) return;
+
+  const capacity = target.capacity || 1;
+  const currentArr = entry.matches.get(targetIdx) || [];
+
+  // Prevent adding duplicate if already in this target
+  if (currentArr.includes(sourceStr)) {
+    entry.activeSource = null;
+    renderMatchingBoard(question, entry);
+    return;
+  }
+
+  // If bucket at capacity > 1 is full, keep existing placement and inform user
+  if (capacity > 1 && currentArr.length >= capacity) {
+    showToast(`"${target.label}" already holds ${capacity} items. Click a placed item to remove it.`);
+    return;
+  }
+
+  removeSourceFromAllTargets(entry, sourceStr);
+
+  if (capacity === 1) {
+    entry.matches.set(targetIdx, [sourceStr]);
+  } else {
+    const updated = entry.matches.get(targetIdx) || [];
+    entry.matches.set(targetIdx, [...updated, sourceStr]);
+  }
+
+  entry.activeSource = null;
+  renderMatchingBoard(question, entry);
+  updateSelectionHintBadge(question, entry);
+  updateControls();
+}
+
+function unassignFromTarget(question, entry, sourceStr, targetIdx) {
+  if (!isExamMode && entry.checked) return;
+  const arr = entry.matches.get(targetIdx) || [];
+  const next = arr.filter((s) => s !== sourceStr);
+  if (next.length) entry.matches.set(targetIdx, next);
+  else entry.matches.delete(targetIdx);
+
+  renderMatchingBoard(question, entry);
+  updateSelectionHintBadge(question, entry);
+  updateControls();
+}
+
+function clearAllMatches(question, entry) {
+  if (!isExamMode && entry.checked) return;
+  entry.matches = new Map();
+  entry.activeSource = null;
+  renderMatchingBoard(question, entry);
+  updateSelectionHintBadge(question, entry);
+  updateControls();
+}
+
+function evaluateMatching(question, entry) {
+  ensureMatchingEntry(question, entry);
+  const targets = question.matching.targets || [];
+  const expectedTotal = getExpectedMatchCount(question);
+  let placedCount = 0;
+
+  const targetResults = targets.map((target, idx) => {
+    const placed = entry.matches.get(idx) || [];
+    placedCount += placed.length;
+    const expected = target.expected || [];
+    const exactSize = placed.length === expected.length;
+    const allMatch = exactSize && expected.every((item) => placed.includes(item));
+    return { target, placed, expected, isCorrect: allMatch };
+  });
+
+  const isCorrect = targetResults.every((r) => r.isCorrect);
+  const userSummary = targets.flatMap((t, idx) =>
+    (entry.matches.get(idx) || []).map((item) => `${t.label} → ${item}`)
+  );
+  const correctSummary = getCorrectList(question);
+
+  return { placedCount, expectedTotal, isCorrect, targetResults, userSummary, correctSummary };
+}
+
+function renderMatchingBoard(question, entry) {
+  ensureMatchingEntry(question, entry);
+  const locked = !isExamMode && entry.checked;
+  const container = els.matchingContainer;
+  container.innerHTML = "";
+
+  const placedSet = getPlacedSet(entry);
+  const poolItems = entry.displaySources.filter((src) => !placedSet.has(src));
+
+  // Left Column: Options / Source Chips
+  const leftCol = document.createElement("div");
+  leftCol.className = "matching-col";
+
+  const leftHead = document.createElement("div");
+  leftHead.className = "matching-col-head";
+  const leftLabel = document.createElement("span");
+  leftLabel.textContent = locked ? "Unused items" : "Options — click or drag";
+
+  const clearBtn = document.createElement("button");
+  clearBtn.type = "button";
+  clearBtn.className = "matching-clear-btn";
+  clearBtn.textContent = "Clear matches";
+  clearBtn.disabled = locked || placedSet.size === 0;
+  clearBtn.addEventListener("click", () => clearAllMatches(question, entry));
+
+  leftHead.append(leftLabel, clearBtn);
+
+  const poolBox = document.createElement("div");
+  poolBox.className = "matching-pool";
+
+  if (!locked) {
+    poolBox.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+    });
+    poolBox.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const draggedSource = e.dataTransfer.getData("text/plain");
+      if (draggedSource) {
+        removeSourceFromAllTargets(entry, draggedSource);
+        entry.activeSource = null;
+        renderMatchingBoard(question, entry);
+        updateSelectionHintBadge(question, entry);
+        updateControls();
+      }
+    });
+  }
+
+  if (poolItems.length === 0) {
+    const emptyMsg = document.createElement("div");
+    emptyMsg.className = "matching-pool-empty";
+    emptyMsg.textContent = locked ? "All options were placed." : "All items placed in targets.";
+    poolBox.appendChild(emptyMsg);
+  } else {
+    poolItems.forEach((srcText, idx) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "matching-chip";
+      chip.disabled = locked;
+      if (entry.activeSource === srcText && !locked) {
+        chip.classList.add("is-selected");
+      }
+      chip.setAttribute("aria-pressed", String(entry.activeSource === srcText));
+
+      const numSpan = document.createElement("span");
+      numSpan.className = "matching-chip-idx";
+      numSpan.textContent = String(idx + 1);
+
+      const textSpan = document.createElement("span");
+      textSpan.textContent = srcText;
+
+      chip.append(numSpan, textSpan);
+
+      if (!locked) {
+        chip.draggable = true;
+        chip.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", srcText);
+          e.dataTransfer.effectAllowed = "move";
+          entry.activeSource = srcText;
+        });
+        chip.addEventListener("click", () => {
+          if (document.activeElement === els.exhibitTrigger) els.exhibitTrigger.blur();
+          entry.activeSource = entry.activeSource === srcText ? null : srcText;
+          renderMatchingBoard(question, entry);
+        });
+      }
+
+      poolBox.appendChild(chip);
+    });
+  }
+
+  leftCol.append(leftHead, poolBox);
+
+  // Right Column: Target Slots / Buckets
+  const rightCol = document.createElement("div");
+  rightCol.className = "matching-col";
+
+  const rightHead = document.createElement("div");
+  rightHead.className = "matching-col-head";
+  const rightLabel = document.createElement("span");
+  rightLabel.textContent = entry.activeSource && !locked
+    ? "Targets — click a target to assign"
+    : "Targets";
+  rightHead.appendChild(rightLabel);
+
+  const targetsWrap = document.createElement("div");
+  targetsWrap.className = "matching-targets";
+
+  const evalResult = locked ? evaluateMatching(question, entry) : null;
+
+  question.matching.targets.forEach((target, targetIdx) => {
+    const placed = entry.matches.get(targetIdx) || [];
+    const cap = target.capacity || 1;
+    const expected = target.expected || [];
+
+    const card = document.createElement("div");
+    card.className = "matching-target-card";
+    if (!locked && entry.activeSource) {
+      card.classList.add("is-drop-ready");
+    }
+
+    if (locked && evalResult) {
+      card.classList.add(evalResult.targetResults[targetIdx].isCorrect ? "is-target-correct" : "is-target-wrong");
+    }
+
+    if (!locked) {
+      card.addEventListener("click", (e) => {
+        if (e.target.closest(".matching-placed-chip")) return;
+        if (!entry.activeSource) {
+          showToast("Select an option on the left first, then click a target.");
+          return;
+        }
+        assignSourceToTarget(question, entry, entry.activeSource, targetIdx);
+      });
+      card.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        card.classList.add("is-drag-over");
+      });
+      card.addEventListener("dragleave", () => {
+        card.classList.remove("is-drag-over");
+      });
+      card.addEventListener("drop", (e) => {
+        e.preventDefault();
+        card.classList.remove("is-drag-over");
+        const draggedSource = e.dataTransfer.getData("text/plain");
+        if (draggedSource) {
+          assignSourceToTarget(question, entry, draggedSource, targetIdx);
+        }
+      });
+    }
+
+    const head = document.createElement("div");
+    head.className = "matching-target-head";
+
+    const labelEl = document.createElement("span");
+    labelEl.className = "matching-target-label";
+    labelEl.textContent = target.label;
+
+    const capEl = document.createElement("span");
+    capEl.className = "matching-target-cap";
+    capEl.textContent = cap > 1 ? `${placed.length}/${cap}` : (placed.length ? "1/1" : "");
+
+    head.append(labelEl, capEl);
+    card.appendChild(head);
+
+    const slotsWrap = document.createElement("div");
+    slotsWrap.className = "matching-slots";
+
+    placed.forEach((itemText) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "matching-placed-chip";
+      if (locked) {
+        chip.classList.add("is-locked", expected.includes(itemText) ? "is-correct" : "is-wrong");
+        chip.disabled = true;
+      }
+
+      const txt = document.createElement("span");
+      txt.textContent = itemText;
+      chip.appendChild(txt);
+
+      if (!locked) {
+        chip.title = "Click to remove match";
+        chip.draggable = true;
+        chip.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", itemText);
+          e.dataTransfer.effectAllowed = "move";
+        });
+        chip.addEventListener("click", (e) => {
+          e.stopPropagation();
+          unassignFromTarget(question, entry, itemText, targetIdx);
+        });
+
+        const removeMark = document.createElement("span");
+        removeMark.className = "matching-remove-mark";
+        removeMark.setAttribute("aria-hidden", "true");
+        removeMark.textContent = "×";
+        chip.appendChild(removeMark);
+      }
+
+      slotsWrap.appendChild(chip);
+    });
+
+    if (placed.length === 0) {
+      const placeholder = document.createElement("div");
+      placeholder.className = "matching-slot-placeholder";
+      placeholder.textContent = expected.length === 0 && locked
+        ? "Correctly left empty (unused distractor)"
+        : (!locked ? (entry.activeSource ? "Click to place here" : "Click option left or drop here") : "Empty");
+      slotsWrap.appendChild(placeholder);
+    }
+
+    card.appendChild(slotsWrap);
+
+    if (locked && evalResult && !evalResult.targetResults[targetIdx].isCorrect) {
+      const correction = document.createElement("div");
+      correction.className = "matching-correction";
+      const strong = document.createElement("strong");
+      strong.textContent = "Expected: ";
+      correction.appendChild(strong);
+      correction.appendChild(document.createTextNode(expected.length ? expected.join(" · ") : "Leave empty (unused target)"));
+      card.appendChild(correction);
+    }
+
+    targetsWrap.appendChild(card);
+  });
+
+  rightCol.append(rightHead, targetsWrap);
+  container.append(leftCol, rightCol);
+}
+
 /* ---------- Answering & Progress Persistence ---------- */
 
 function toggleAnswer(optText) {
   const current = currentQuestion();
-  if (!current || transitioning) return;
+  if (!current || transitioning || isMatching(current)) return;
+
+  if (document.activeElement === els.exhibitTrigger) els.exhibitTrigger.blur();
 
   const entry = getEntry(displayedId);
   if (!isExamMode && entry.checked) return;
@@ -563,6 +970,7 @@ function toggleAnswer(optText) {
   }
 
   syncSelectionClasses(entry);
+  updateSelectionHintBadge(current, entry);
 }
 
 function checkAnswer() {
@@ -571,6 +979,37 @@ function checkAnswer() {
 
   const entry = getEntry(displayedId);
   if (entry.checked) return;
+
+  const qNum = getQuestionNumber(current, displayedId);
+
+  if (isMatching(current)) {
+    const res = evaluateMatching(current, entry);
+    if (res.placedCount < res.expectedTotal) {
+      showToast(`Place all ${res.expectedTotal} matches first (${res.placedCount}/${res.expectedTotal} placed).`);
+      return;
+    }
+
+    entry.checked = true;
+    entry.correct = res.isCorrect;
+
+    renderMatchingBoard(current, entry);
+    showFeedback(entry.correct, current);
+    updateControls();
+
+    window.CCNAStorage.recordAnswerResult({
+      qNumber: qNum,
+      questionId: displayedId,
+      selected: res.userSummary,
+      isCorrect: entry.correct
+    });
+
+    if (entry.correct && activeFilter === "mistakes") {
+      showToast(`Mastered! Question #${qNum} removed from mistakes review.`);
+    }
+
+    buildTopicFilter();
+    return;
+  }
 
   const correctList = getCorrectList(current);
   if (correctList.length === 0) return;
@@ -592,45 +1031,59 @@ function checkAnswer() {
     applyResultState(button, correctList, entry.selected);
   });
 
-  showFeedback(entry.correct);
+  showFeedback(entry.correct, current);
   updateControls();
 
-  // Persist result into localStorage via CCNAStorage
-  const qNum = getQuestionNumber(current, displayedId);
-  if (window.CCNAStorage) {
-    window.CCNAStorage.recordAnswerResult({
-      qNumber: qNum,
-      questionId: displayedId,
-      selected: entry.selected,
-      correctList: correctList,
-      isCorrect: entry.correct
-    });
+  window.CCNAStorage.recordAnswerResult({
+    qNumber: qNum,
+    questionId: displayedId,
+    selected: entry.selected,
+    isCorrect: entry.correct
+  });
 
-    if (entry.correct && activeFilter === "mistakes") {
-      showToast(`Mastered! Question #${qNum} removed from mistakes review.`);
-    }
-
-    buildTopicFilter();
+  if (entry.correct && activeFilter === "mistakes") {
+    showToast(`Mastered! Question #${qNum} removed from mistakes review.`);
   }
+
+  buildTopicFilter();
 }
 
-function showFeedback(isCorrect) {
+function showFeedback(isCorrect, question) {
   els.feedback.className = `feedback is-visible ${isCorrect ? "is-success" : "is-error"}`;
-  els.feedback.innerHTML = isCorrect
-    ? "<strong>Correct.</strong>"
-    : "<strong>Incorrect.</strong> The correct answer is highlighted above.";
+  els.feedback.innerHTML = "";
+
+  const heading = document.createElement("strong");
+  if (isCorrect) {
+    heading.textContent = "Correct.";
+  } else if (isMatching(question)) {
+    heading.textContent = "Incorrect. Expected matches are shown above.";
+  } else {
+    heading.textContent = "Incorrect. The correct answer is highlighted above.";
+  }
+  els.feedback.appendChild(heading);
+
+  const expText = window.CCNAStorage.formatExplanation(question?.explanation);
+  if (expText) {
+    const expEl = document.createElement("div");
+    expEl.className = "feedback-explanation";
+    expEl.textContent = expText;
+    els.feedback.appendChild(expEl);
+  }
 }
 
 function resetFeedback() {
   els.feedback.className = "feedback";
-  els.feedback.textContent = "";
+  els.feedback.innerHTML = "";
 }
 
 /* ---------- Personal Notes Management ---------- */
 
 function renderQuestionNote(number) {
   if (!els.noteBox) return;
-  const note = window.CCNAStorage ? window.CCNAStorage.getQuestionNote(number) : "";
+  els.noteBox.hidden = isExamMode;
+  if (els.noteContentPanel) els.noteContentPanel.hidden = true;
+
+  const note = window.CCNAStorage.getQuestionNote(number);
   els.noteInput.value = note;
   if (note) {
     els.noteToggleText.textContent = `Personal note: "${note.substring(0, 32)}${note.length > 32 ? "…" : ""}"`;
@@ -657,11 +1110,9 @@ if (els.noteSaveBtn) {
     if (!current) return;
     const num = getQuestionNumber(current, displayedId);
     const text = els.noteInput.value.trim();
-    if (window.CCNAStorage) {
-      window.CCNAStorage.saveQuestionNote(num, text);
-      renderQuestionNote(num);
-      showToast(text ? `Note saved for Question #${num}` : "Note cleared.");
-    }
+    window.CCNAStorage.saveQuestionNote(num, text);
+    renderQuestionNote(num);
+    showToast(text ? `Note saved for Question #${num}` : "Note cleared.");
   });
 }
 
@@ -671,11 +1122,9 @@ if (els.noteClearBtn) {
     if (!current) return;
     const num = getQuestionNumber(current, displayedId);
     els.noteInput.value = "";
-    if (window.CCNAStorage) {
-      window.CCNAStorage.saveQuestionNote(num, "");
-      renderQuestionNote(num);
-      showToast("Note cleared.");
-    }
+    window.CCNAStorage.saveQuestionNote(num, "");
+    renderQuestionNote(num);
+    showToast("Note cleared.");
   });
 }
 
@@ -685,16 +1134,14 @@ function toggleCurrentFlag() {
   const current = currentQuestion();
   if (!current) return;
   const num = getQuestionNumber(current, displayedId);
-  if (window.CCNAStorage) {
-    const isNowFlagged = window.CCNAStorage.toggleQuestionFlag(num);
-    if (els.flagBtn) {
-      els.flagBtn.classList.toggle("is-flagged", isNowFlagged);
-      const label = els.flagBtn.querySelector(".flag-label");
-      if (label) label.textContent = isNowFlagged ? "Flagged" : "Flag";
-    }
-    showToast(isNowFlagged ? `Question #${num} flagged for review (F)` : `Question #${num} unflagged`);
-    buildTopicFilter();
+  const isNowFlagged = window.CCNAStorage.toggleQuestionFlag(num);
+  if (els.flagBtn) {
+    els.flagBtn.classList.toggle("is-flagged", isNowFlagged);
+    const label = els.flagBtn.querySelector(".flag-label");
+    if (label) label.textContent = isNowFlagged ? "Flagged" : "Flag";
   }
+  showToast(isNowFlagged ? `Question #${num} flagged for review (F)` : `Question #${num} unflagged`);
+  buildTopicFilter();
 }
 
 if (els.flagBtn) {
@@ -705,6 +1152,7 @@ if (els.flagBtn) {
 
 if (els.shuffleQuestionsBtn) {
   els.shuffleQuestionsBtn.addEventListener("click", () => {
+    if (isExamMode) return;
     isShuffleQuestions = !isShuffleQuestions;
     els.shuffleQuestionsBtn.classList.toggle("is-active", isShuffleQuestions);
 
@@ -726,11 +1174,13 @@ if (els.shuffleOptionsBtn) {
     isShuffleOptions = !isShuffleOptions;
     els.shuffleOptionsBtn.classList.toggle("is-active", isShuffleOptions);
 
-    // Clear cached option display orders
-    session.forEach((val) => delete val.displayOptions);
+    session.forEach((val) => {
+      delete val.displayOptions;
+      delete val.displaySources;
+    });
 
     renderCurrent();
-    showToast(isShuffleOptions ? "Answer options (A–D) will be shuffled." : "Answer options restored to original order.");
+    showToast(isShuffleOptions ? "Options will be shuffled." : "Options restored to original order.");
   });
 }
 
@@ -749,15 +1199,16 @@ function startMockExam() {
   els.card.classList.add("is-exam-mode");
   els.examModeBtn.classList.add("is-active");
   els.examTimer.hidden = false;
+  els.topicFilter.disabled = true;
+  if (els.shuffleQuestionsBtn) els.shuffleQuestionsBtn.disabled = true;
 
-  // Sample 50 questions randomly across all topics
-  const pool = [...questions.map((q) => q._id)];
+  const pool = questions.map((q) => q._id);
   shuffleArray(pool);
   filtered = pool.slice(0, Math.min(50, pool.length));
   position = 0;
   session.clear();
 
-  examTimeRemaining = 3600; // 60 minutes
+  examTimeRemaining = 3600;
   updateExamTimerDisplay();
   clearInterval(examTimerInterval);
   examTimerInterval = setInterval(() => {
@@ -778,52 +1229,55 @@ function finishMockExam(isTimeUp = false) {
 
   let correctCount = 0;
   let wrongCount = 0;
-  const missedList = [];
-  const topicBreakdown = {};
+  const chapterBreakdown = new Map();
+  const batchResults = [];
 
   filtered.forEach((id) => {
     const q = questions[id];
     const qNum = getQuestionNumber(q, id);
     const entry = getEntry(id);
-    const correctList = getCorrectList(q);
 
-    const isCorrect = correctList.length > 0 &&
-      entry.selected.size === correctList.length &&
-      [...entry.selected].every((ans) => correctList.includes(ans));
+    let isCorrect = false;
+    let selectedForRecord = entry.selected;
 
-    const topicLabel = q._topic ? `Topic ${q._topic.label}` : "CCNA 2";
-    if (!topicBreakdown[topicLabel]) topicBreakdown[topicLabel] = { total: 0, correct: 0 };
-    topicBreakdown[topicLabel].total += 1;
+    if (isMatching(q)) {
+      const res = evaluateMatching(q, entry);
+      isCorrect = res.isCorrect;
+      selectedForRecord = res.userSummary;
+    } else {
+      const correctList = getCorrectList(q);
+      isCorrect = correctList.length > 0 &&
+        entry.selected.size === correctList.length &&
+        [...entry.selected].every((ans) => correctList.includes(ans));
+    }
+
+    const chapterKey = q._topic?.chapter ?? 0;
+    if (!chapterBreakdown.has(chapterKey)) chapterBreakdown.set(chapterKey, { total: 0, correct: 0 });
+    const stats = chapterBreakdown.get(chapterKey);
+    stats.total += 1;
 
     if (isCorrect) {
       correctCount += 1;
-      topicBreakdown[topicLabel].correct += 1;
-      window.CCNAStorage?.recordAnswerResult({
-        qNumber: qNum,
-        questionId: id,
-        selected: entry.selected,
-        correctList,
-        isCorrect: true
-      });
+      stats.correct += 1;
     } else {
       wrongCount += 1;
-      missedList.push(qNum);
-      window.CCNAStorage?.recordAnswerResult({
-        qNumber: qNum,
-        questionId: id,
-        selected: entry.selected,
-        correctList,
-        isCorrect: false
-      });
     }
+
+    batchResults.push({
+      qNumber: qNum,
+      questionId: id,
+      selected: selectedForRecord,
+      isCorrect
+    });
   });
 
-  const total = filtered.length;
+  window.CCNAStorage.recordBatchResults(batchResults);
+
+  const total = filtered.length || 1;
   const accuracy = Math.round((correctCount / total) * 100);
   const isPass = accuracy >= 82.5;
 
-  // Populate Exam Results Modal
-  els.examResultTitle.textContent = isTimeUp ? "Time's Up! Mock Exam Results" : "Mock Exam Simulation Complete";
+  els.examResultTitle.textContent = isTimeUp ? "Time's Up! Mock Exam Results" : "Mock Exam Complete";
   els.examScoreLarge.textContent = `${correctCount} / ${total}`;
   els.examPassBadge.textContent = isPass ? "PASS" : "FAIL";
   els.examScoreBanner.className = `exam-score-banner ${isPass ? "is-pass" : "is-fail"}`;
@@ -831,14 +1285,19 @@ function finishMockExam(isTimeUp = false) {
   els.examMissedCount.textContent = `${wrongCount} question${wrongCount === 1 ? "" : "s"}`;
 
   els.examTopicBreakdown.innerHTML = "";
-  Object.keys(topicBreakdown).forEach((top) => {
-    const item = topicBreakdown[top];
+  const sortedChapters = [...chapterBreakdown.keys()].sort((a, b) => a - b);
+  sortedChapters.forEach((ch) => {
+    const item = chapterBreakdown.get(ch);
     const row = document.createElement("div");
     row.className = "exam-topic-item";
-    row.innerHTML = `
-      <span>${top}</span>
-      <strong>${item.correct} / ${item.total} (${Math.round((item.correct / item.total) * 100)}%)</strong>
-    `;
+
+    const labelSpan = document.createElement("span");
+    labelSpan.textContent = ch > 0 ? `Topic ${ch}` : "Unassigned";
+
+    const valStrong = document.createElement("strong");
+    valStrong.textContent = `${item.correct} / ${item.total} (${Math.round((item.correct / item.total) * 100)}%)`;
+
+    row.append(labelSpan, valStrong);
     els.examTopicBreakdown.appendChild(row);
   });
 
@@ -847,36 +1306,47 @@ function finishMockExam(isTimeUp = false) {
   document.body.classList.add("modal-open");
 }
 
-function exitExamMode() {
+function exitExamMode({ targetFilter } = {}) {
   isExamMode = false;
   clearInterval(examTimerInterval);
   els.card.classList.remove("is-exam-mode");
   els.examModeBtn.classList.remove("is-active");
   els.examTimer.hidden = true;
+  els.topicFilter.disabled = false;
+  if (els.shuffleQuestionsBtn) els.shuffleQuestionsBtn.disabled = false;
+  if (els.noteBox) els.noteBox.hidden = false;
+
   els.examResultModal.classList.add("hidden");
   els.examResultModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
 
-  applyFilter(examSavedFilter || "all", { animate: false });
+  buildTopicFilter();
+  applyFilter(targetFilter || examSavedFilter || "all", { animate: false });
 }
 
 if (els.examModeBtn) {
   els.examModeBtn.addEventListener("click", () => {
     if (isExamMode) {
-      const confirmExit = window.confirm("Exit current Mock Exam? Exam progress will be discarded.");
-      if (confirmExit) exitExamMode();
+      if (window.confirm("Exit current Mock Exam? Exam progress will be discarded.")) exitExamMode();
     } else {
-      const confirmStart = window.confirm("Start a timed 60-minute CCNA Mock Exam?\n\n• 50 randomized questions across all topics\n• Immediate feedback hidden until finish\n• Missed questions automatically tracked for review");
-      if (confirmStart) startMockExam();
+      if (window.confirm("Start a timed 60-minute CCNA Mock Exam?\n\n• 50 randomized questions across all topics\n• Immediate feedback hidden until finish\n• Missed questions automatically tracked for review")) {
+        startMockExam();
+      }
     }
   });
 }
 
 if (els.finishExam) {
   els.finishExam.addEventListener("click", () => {
-    const unansweredInExam = filtered.filter((id) => getEntry(id).selected.size === 0).length;
+    const unansweredInExam = filtered.filter((id) => {
+      const q = questions[id];
+      const entry = getEntry(id);
+      if (isMatching(q)) return getPlacedMatchCount(q, entry) < getExpectedMatchCount(q);
+      return entry.selected.size === 0;
+    }).length;
+
     const msg = unansweredInExam > 0
-      ? `You have ${unansweredInExam} unanswered questions in this exam. Finish and submit anyway?`
+      ? `You have ${unansweredInExam} incomplete question${unansweredInExam === 1 ? "" : "s"} in this exam. Finish and submit anyway?`
       : "Ready to finish and submit your Mock Exam?";
     if (window.confirm(msg)) {
       finishMockExam(false);
@@ -886,8 +1356,7 @@ if (els.finishExam) {
 
 if (els.examReviewMistakesBtn) {
   els.examReviewMistakesBtn.addEventListener("click", () => {
-    exitExamMode();
-    applyFilter("mistakes", { animate: false });
+    exitExamMode({ targetFilter: "mistakes" });
     showToast("Now practicing missed exam questions.");
   });
 }
@@ -912,8 +1381,11 @@ function showLoadError() {
   filtered = [];
   els.questionBadge.textContent = "DATA ERROR";
   els.topicBadge.hidden = true;
+  if (els.multiHintBadge) els.multiHintBadge.hidden = true;
   els.question.textContent = "The question bank could not be loaded.";
   els.answers.innerHTML = "";
+  els.matchingContainer.innerHTML = "";
+  els.matchingContainer.hidden = true;
   els.empty.hidden = false;
   els.empty.querySelector("strong").textContent = "Check that ccna.json is in the same folder.";
   els.empty.querySelector("span").textContent = "The interface is ready, but the data source did not respond.";
@@ -923,16 +1395,17 @@ function showLoadError() {
   els.next.disabled = true;
 }
 
-function openImageViewer() {
+function openImageViewer({ fromTrigger = false } = {}) {
   const current = currentQuestion();
   if (!current?.image_url || els.exhibitError.hidden === false) return;
+  viewerOpenedByTrigger = fromTrigger;
   els.overlayImage.src = current.image_url;
   els.overlay.classList.remove("hidden");
   els.overlay.classList.add("is-opening");
   els.overlay.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
   els.overlayClose.focus();
-  window.setTimeout(() => els.overlay.classList.remove("is-opening"), 430);
+  window.setTimeout(() => els.overlay.classList.remove("is-opening"), 200);
 }
 
 function closeImageViewer() {
@@ -940,16 +1413,23 @@ function closeImageViewer() {
   els.overlay.classList.add("hidden");
   els.overlay.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
-  els.exhibitTrigger.focus();
+  if (viewerOpenedByTrigger) {
+    els.exhibitTrigger.focus();
+  } else {
+    els.overlayClose.blur();
+  }
+  viewerOpenedByTrigger = false;
 }
 
 /* ---------- Events & Keyboard Shortcuts ---------- */
 
-els.topicFilter.addEventListener("change", (event) => applyFilter(event.target.value));
+els.topicFilter.addEventListener("change", (event) => {
+  if (!isExamMode) applyFilter(event.target.value);
+});
 els.prev.addEventListener("click", previousQuestion);
 els.check.addEventListener("click", checkAnswer);
 els.next.addEventListener("click", nextQuestion);
-els.exhibitTrigger.addEventListener("click", openImageViewer);
+els.exhibitTrigger.addEventListener("click", () => openImageViewer({ fromTrigger: true }));
 els.overlayClose.addEventListener("click", (event) => {
   event.stopPropagation();
   closeImageViewer();
@@ -959,7 +1439,11 @@ els.overlay.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  // Modal / overlay escape handling
+  const tag = document.activeElement?.tagName;
+  if (["INPUT", "TEXTAREA", "SELECT"].includes(tag) || document.activeElement?.isContentEditable) return;
+
+  if (event.altKey || event.ctrlKey || event.metaKey) return;
+
   if (event.key === "Escape") {
     if (!els.overlay.classList.contains("hidden")) {
       event.preventDefault();
@@ -973,41 +1457,59 @@ document.addEventListener("keydown", (event) => {
     }
   }
 
-  if (!els.overlay.classList.contains("hidden")) return;
-  if (event.altKey || event.ctrlKey || event.metaKey) return; // keep system shortcuts
-
-  // Guardrail: disable shortcuts while focused in inputs/textareas/selects
-  const tag = document.activeElement?.tagName;
-  if (["INPUT", "TEXTAREA", "SELECT"].includes(tag) || document.activeElement?.isContentEditable) return;
-  const onInteractive = tag === "BUTTON" || tag === "A";
-
-  // Quick zoom exhibit (Z key)
+  // Toggle exhibit quick-zoom (Z key) both when closed and when open
   if (event.key === "z" || event.key === "Z") {
     const current = currentQuestion();
     if (current?.image_url) {
       event.preventDefault();
-      if (els.overlay.classList.contains("hidden")) openImageViewer();
+      if (els.overlay.classList.contains("hidden")) openImageViewer({ fromTrigger: false });
       else closeImageViewer();
       return;
     }
   }
 
-  // Flag current question (F key)
+  // Block remaining shortcuts while lightbox or exam result modal is open
+  if (!els.overlay.classList.contains("hidden")) return;
+  if (els.examResultModal && !els.examResultModal.classList.contains("hidden")) return;
+
   if (event.key === "f" || event.key === "F") {
     event.preventDefault();
     toggleCurrentFlag();
     return;
   }
 
-  // Answer selection remapped cleanly to displayed options
+  const current = currentQuestion();
+  const entry = displayedId === null ? null : getEntry(displayedId);
+
   if (/^[1-9]$/.test(event.key)) {
     const idx = Number(event.key) - 1;
-    const option = els.answers.querySelectorAll(".answer-option")[idx];
-    if (option && !option.disabled) option.click();
+    if (current && isMatching(current)) {
+      const chip = els.matchingContainer.querySelectorAll(".matching-chip")[idx];
+      if (chip && !chip.disabled) {
+        chip.focus({ preventScroll: true });
+        chip.click();
+      }
+    } else {
+      const option = els.answers.querySelectorAll(".answer-option")[idx];
+      if (option && !option.disabled) {
+        option.focus({ preventScroll: true });
+        option.click();
+      }
+    }
   } else if (event.key === "Enter") {
-    if (onInteractive) return;
+    const active = document.activeElement;
+    const isNonOptionControl = active &&
+      ((active.tagName === "BUTTON" && !active.classList.contains("answer-option") && !active.classList.contains("matching-chip")) || active.tagName === "A");
+    if (isNonOptionControl) return;
+
     event.preventDefault();
-    if (!isExamMode) checkAnswer();
+    if (isExamMode) {
+      nextQuestion();
+    } else if (entry && !entry.checked) {
+      checkAnswer();
+    } else if (entry && entry.checked) {
+      nextQuestion();
+    }
   } else if (event.key === "ArrowRight") {
     event.preventDefault();
     nextQuestion();

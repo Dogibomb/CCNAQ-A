@@ -1,5 +1,4 @@
 let allQuestions = [];
-let recordObserver = null;
 let lastViewerTrigger = null;
 
 const list = document.getElementById("questionsList");
@@ -21,10 +20,8 @@ fetch("ccna.json")
   .then((data) => {
     if (!Array.isArray(data)) throw new Error("Question bank is not an array.");
     allQuestions = data;
-    if (window.CCNAStorage) window.CCNAStorage.syncNavbarBadges(data);
     updateStats(data);
     buildRecords(data);
-    setupObserver();
   })
   .catch((error) => {
     console.error(error);
@@ -34,28 +31,9 @@ fetch("ccna.json")
     visibleQuestions.textContent = "0";
   });
 
-function cleanQuestionText(text = "") {
-  return text.replace(/^\s*\d+\.\s*/, "").trim();
-}
-
-function getQuestionNumber(question, fallbackIndex) {
-  const match = String(question.question || "").match(/^\s*(\d+)\./);
-  return match ? Number(match[1]) : fallbackIndex + 1;
-}
-
-function getTopic(question) {
-  const match = String(question.explanation || "").match(/Topic\s*([\d.]+)/i);
-  return match ? `Topic ${match[1]}` : "CCNA 2";
-}
-
-function getCorrectAnswers(question) {
-  if (window.CCNAStorage) {
-    const progress = window.CCNAStorage.loadProgress();
-    const effective = window.CCNAStorage.getEffectiveCorrectAnswers(question, progress.customOverrides);
-    if (effective.length) return effective;
-  }
-  if (Array.isArray(question.correct_answer)) return question.correct_answer;
-  return question.correct_answer ? [question.correct_answer] : [];
+function getTopicLabel(question) {
+  const topicObj = window.CCNAStorage.parseTopic(question);
+  return topicObj ? `Topic ${topicObj.label}` : "CCNA 2";
 }
 
 function updateStats(data) {
@@ -64,17 +42,71 @@ function updateStats(data) {
   visibleQuestions.textContent = String(data.length);
 }
 
+function buildMatchingPreview(question) {
+  const wrap = document.createElement("div");
+  wrap.className = "matching-preview";
+
+  const itemsGroup = document.createElement("div");
+  itemsGroup.className = "matching-preview-group";
+  const itemsLabel = document.createElement("strong");
+  itemsLabel.textContent = "Items";
+  const itemsUl = document.createElement("ul");
+  (question.matching.sources || []).forEach((src) => {
+    const li = document.createElement("li");
+    li.textContent = src;
+    itemsUl.appendChild(li);
+  });
+  itemsGroup.append(itemsLabel, itemsUl);
+
+  const targetsGroup = document.createElement("div");
+  targetsGroup.className = "matching-preview-group";
+  const targetsLabel = document.createElement("strong");
+  targetsLabel.textContent = "Targets";
+  const targetsUl = document.createElement("ul");
+  (question.matching.targets || []).forEach((t) => {
+    const li = document.createElement("li");
+    li.textContent = t.label;
+    targetsUl.appendChild(li);
+  });
+  targetsGroup.append(targetsLabel, targetsUl);
+
+  wrap.append(itemsGroup, targetsGroup);
+  return wrap;
+}
+
 function buildRecords(questions) {
   list.innerHTML = "";
   const fragment = document.createDocumentFragment();
+  const progress = window.CCNAStorage.loadProgress();
+  const flaggedSet = new Set(progress.flaggedQuestions);
+  const overrides = progress.customOverrides || {};
+  const notes = progress.notes || {};
 
   questions.forEach((question, index) => {
-    const number = getQuestionNumber(question, index);
+    const number = window.CCNAStorage.getQuestionNumber(question, index);
+    const isMatch = window.CCNAStorage.isMatchingQuestion(question);
     const options = Array.isArray(question.options) ? question.options : [];
-    const correctAnswers = getCorrectAnswers(question);
+    const correctAnswers = window.CCNAStorage.getEffectiveCorrectAnswers(question, overrides);
+    const topicLabel = getTopicLabel(question);
+    const savedNote = notes[String(number)] || "";
+    const formattedExp = window.CCNAStorage.formatExplanation(question.explanation);
+
+    const searchParts = [
+      number,
+      topicLabel,
+      question.question,
+      ...options,
+      ...correctAnswers,
+      formattedExp,
+      savedNote
+    ];
+    if (isMatch) {
+      searchParts.push(...(question.matching.sources || []), ...(question.matching.targets || []).map((t) => t.label));
+    }
+
     const record = document.createElement("article");
     record.className = "question-record";
-    record.dataset.search = [number, question.question, ...options].join(" ").toLowerCase();
+    record.dataset.search = searchParts.join(" ").toLowerCase();
     record.dataset.index = String(index);
 
     const questionCell = document.createElement("div");
@@ -82,22 +114,40 @@ function buildRecords(questions) {
 
     const meta = document.createElement("div");
     meta.className = "record-meta";
-    const isFlagged = window.CCNAStorage?.isQuestionFlagged(number);
-    meta.innerHTML = `<span class="record-number">Q${number}</span><span class="record-topic"></span>${isFlagged ? '<span class="record-flag-pill">⚑ FLAGGED</span>' : ''}`;
-    meta.querySelector(".record-topic").textContent = getTopic(question);
+
+    const numSpan = document.createElement("span");
+    numSpan.className = "record-number";
+    numSpan.textContent = `Q${number}`;
+
+    const topicSpan = document.createElement("span");
+    topicSpan.className = "record-topic";
+    topicSpan.textContent = topicLabel;
+
+    meta.append(numSpan, topicSpan);
+
+    if (flaggedSet.has(number)) {
+      const flagPill = document.createElement("span");
+      flagPill.className = "record-flag-pill";
+      flagPill.textContent = "FLAGGED";
+      meta.appendChild(flagPill);
+    }
 
     const questionText = document.createElement("p");
     questionText.className = "record-question-text";
-    questionText.textContent = cleanQuestionText(question.question);
+    questionText.textContent = window.CCNAStorage.cleanQuestionText(question.question);
 
     questionCell.append(meta, questionText);
 
-    const savedNote = window.CCNAStorage ? window.CCNAStorage.getQuestionNote(number) : "";
     if (savedNote) {
       const noteEl = document.createElement("div");
       noteEl.className = "record-note";
-      noteEl.innerHTML = `<span class="note-badge">NOTE</span> <span class="note-text"></span>`;
-      noteEl.querySelector(".note-text").textContent = savedNote;
+      const badge = document.createElement("span");
+      badge.className = "note-badge";
+      badge.textContent = "NOTE";
+      const textSpan = document.createElement("span");
+      textSpan.className = "note-text";
+      textSpan.textContent = savedNote;
+      noteEl.append(badge, textSpan);
       questionCell.appendChild(noteEl);
     }
 
@@ -127,7 +177,9 @@ function buildRecords(questions) {
     const optionsCell = document.createElement("div");
     optionsCell.className = "record-cell";
 
-    if (options.length) {
+    if (isMatch) {
+      optionsCell.appendChild(buildMatchingPreview(question));
+    } else if (options.length) {
       const optionsList = document.createElement("ol");
       optionsList.className = "answers-list";
       options.forEach((option) => {
@@ -160,7 +212,7 @@ function buildRecords(questions) {
 
     const label = document.createElement("div");
     label.className = "correct-answer-label";
-    label.innerHTML = `<svg viewBox="0 0 24 24" class="icon"><path d="m7 12.5 3.2 3.2L17.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Verified answer</span>`;
+    label.innerHTML = `<svg viewBox="0 0 24 24" class="icon"><path d="m7 12.5 3.2 3.2L17.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${isMatch ? "Verified matches" : "Verified answer"}</span>`;
     correctBox.appendChild(label);
 
     if (correctAnswers.length) {
@@ -177,10 +229,10 @@ function buildRecords(questions) {
       correctBox.appendChild(answerText);
     }
 
-    if (question.explanation) {
+    if (formattedExp) {
       const explanation = document.createElement("div");
       explanation.className = "explanation";
-      explanation.textContent = question.explanation;
+      explanation.textContent = formattedExp;
       correctBox.appendChild(explanation);
     }
 
@@ -188,13 +240,6 @@ function buildRecords(questions) {
       const isOpen = record.classList.toggle("is-revealed");
       revealButton.setAttribute("aria-expanded", String(isOpen));
       revealButton.querySelector("span").textContent = isOpen ? "Hide" : "Reveal";
-
-      if (isOpen) {
-        record.classList.remove("flow-confirm");
-        void record.offsetWidth;
-        record.classList.add("flow-confirm");
-        window.setTimeout(() => record.classList.remove("flow-confirm"), 650);
-      }
     });
 
     answerCell.append(revealButton, correctBox);
@@ -205,25 +250,6 @@ function buildRecords(questions) {
   list.appendChild(fragment);
 }
 
-function setupObserver() {
-  recordObserver?.disconnect();
-
-  if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    document.querySelectorAll(".question-record").forEach((record) => record.classList.add("is-visible"));
-    return;
-  }
-
-  recordObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("is-visible");
-      recordObserver.unobserve(entry.target);
-    });
-  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-
-  document.querySelectorAll(".question-record").forEach((record) => recordObserver.observe(record));
-}
-
 function filterQuestions() {
   const query = searchInput.value.trim().toLowerCase();
   let visible = 0;
@@ -231,10 +257,7 @@ function filterQuestions() {
   document.querySelectorAll(".question-record").forEach((record) => {
     const matches = !query || record.dataset.search.includes(query);
     record.hidden = !matches;
-    if (matches) {
-      visible += 1;
-      if (!record.classList.contains("is-visible")) record.classList.add("is-visible");
-    }
+    if (matches) visible += 1;
   });
 
   visibleQuestions.textContent = String(visible);
@@ -249,7 +272,7 @@ function openImageViewer(src, trigger) {
   imageOverlay.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
   closeImageOverlay.focus();
-  window.setTimeout(() => imageOverlay.classList.remove("is-opening"), 430);
+  window.setTimeout(() => imageOverlay.classList.remove("is-opening"), 200);
 }
 
 function closeImage() {
@@ -272,11 +295,16 @@ imageOverlay.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !imageOverlay.classList.contains("hidden")) {
-    event.preventDefault();
-    closeImage();
+  if (!imageOverlay.classList.contains("hidden")) {
+    if (event.key === "Escape" || event.key === "z" || event.key === "Z") {
+      event.preventDefault();
+      closeImage();
+    }
     return;
   }
+
+  const tag = document.activeElement?.tagName;
+  if (["INPUT", "TEXTAREA", "SELECT"].includes(tag) || document.activeElement?.isContentEditable) return;
 
   if (event.key === "/" && document.activeElement !== searchInput) {
     event.preventDefault();

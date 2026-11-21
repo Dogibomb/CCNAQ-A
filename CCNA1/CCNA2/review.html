@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#070A0F">
+  <meta name="theme-color" content="#0e1116">
   <title>CCNA 2 — Review &amp; Progress Tracker</title>
   <link rel="stylesheet" href="navbar.css">
   <link rel="stylesheet" href="styleque.css">
-  <link rel="stylesheet" href="styleindex.css">
   <link rel="icon" type="image/svg+xml" href="cisco.svg">
 </head>
 <body class="page-questions">
@@ -25,7 +24,6 @@
     <div class="nav-links">
       <a href="index.html">Quiz</a>
       <a href="questions.html">Questions</a>
-      <a href="unanswered.html">No Answer <span class="nav-badge nav-unanswered-badge">(8)</span></a>
       <a href="review.html" class="active" aria-current="page">Review</a>
       <a href="../index.html">CCNA1</a>
     </div>
@@ -36,9 +34,8 @@
   <section class="database-shell">
     <header class="database-hero">
       <div>
-        <span class="page-kicker">Study performance</span>
-        <h1 class="page-title">Review &amp; progress</h1>
-        <p class="page-subtitle">Track your mistake frequency, analyze drill completion history, inspect personalized notes, and target weak CCNA 2 topics.</p>
+        <h1 class="page-title">Review &amp; Progress</h1>
+        <p class="page-subtitle">Track mistake frequency, browse completed drill records, inspect study notes, and target weak CCNA 2 topics.</p>
       </div>
 
       <div class="toolbar-actions">
@@ -50,7 +47,7 @@
     </header>
 
     <section class="database-toolbar" aria-label="Review summary statistics">
-      <div class="stats-grid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+      <div class="stats-grid stats-grid-4">
         <article class="stat-card">
           <span class="stat-label">Completed</span>
           <strong class="stat-value" id="statCompleted">0 / 172</strong>
@@ -116,6 +113,10 @@
           <strong>No mistakes to review!</strong>
           <span>All completed drill questions have been mastered or answered correctly.</span>
         </div>
+        <div id="mistakesSearchEmpty" class="no-results" hidden>
+          <strong>No matching mistakes found.</strong>
+          <span>Try a different keyword or clear the search filter.</span>
+        </div>
       </div>
     </section>
 
@@ -135,12 +136,20 @@
           <strong>No completed questions yet.</strong>
           <span>Start a drill session in Quiz to see your completion timeline and answer outcomes.</span>
         </div>
+        <div id="completedSearchEmpty" class="no-results" hidden>
+          <strong>No matching completed records found.</strong>
+          <span>Try a different keyword or clear the search filter.</span>
+        </div>
       </div>
     </section>
 
     <!-- Sub-view 3: Topic Breakdown -->
     <section id="viewTopics" class="review-subview-panel" hidden>
       <div class="topic-breakdown-grid" id="topicsList"></div>
+      <div id="topicsSearchEmpty" class="no-results" hidden>
+        <strong>No matching topics found.</strong>
+        <span>Try a different keyword or clear the search filter.</span>
+      </div>
     </section>
 
   </section>
